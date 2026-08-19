@@ -1,0 +1,30 @@
+# China Nature
+
+> Independent guide to China's natural landscapes — karst, danxia, mountains, lakes, deserts, grasslands, glaciers, forests, wetlands and the Tibetan plateau. Find your perfect destination with the trip finder, comparisons and itineraries. No tour sales.
+
+## Core
+
+- [Home](https://www.china-nature.com/): Ultimate guide to China's nature — trip finder, 10 landform families, destination comparisons, 20 FAQs, and practical planning advice (visa, tickets, altitude, transport, food, where to stay).
+
+## Key Sections
+
+- [Trip Finder](https://www.china-nature.com/#trip-finder): Filter 12 destinations by landscape type, season, difficulty and altitude.
+- [Landscapes](https://www.china-nature.com/#landscapes): The 10 landform families of China — karst, danxia, mountains, lakes, deserts, grasslands, glaciers, forests, wetlands, plateau.
+- [Compare](https://www.china-nature.com/#compare): Zhangjiajie vs Guilin vs Jiuzhaigou — the honest answer.
+- [When to Go](https://www.china-nature.com/#packing): Best seasons, monthly guide, and what to wear per climate zone.
+- [Wildlife](https://www.china-nature.com/#wildlife): Giant pandas, snow leopards, golden monkeys, Tibetan antelope and more.
+- [What to Eat](https://www.china-nature.com/#food): Regional dishes at each nature destination.
+- [Where to Stay](https://www.china-nature.com/#stay): Where to book for each park, with price ranges.
+- [Getting Around](https://www.china-nature.com/#transport): High-speed rail, flights, private cars and park shuttles.
+- [Plan Your Trip](https://www.china-nature.com/#plan): A six-step planning checklist.
+- [FAQ](https://www.china-nature.com/#faq): 20 questions covering visas, packing, food, safety and costs.
+
+## Destination Guides
+
+- [Guilin & Yangshuo](https://guilin-yang-shuo.com/): Karst peaks, Li River cruises and bamboo rafts.
+- [Zhangjiajie National Park](https://zhangjiajie-national-park.com/): The Avatar sandstone pillars.
+- [Yunnan Province](https://yunnan-province.com/): Stone Forest, rice terraces and Xishuangbanna.
+- [Shangri-La](https://shangri-la-yunnan.com/): Tibetan town at 3,200m in Yunnan.
+- [Tibet & Lhasa](https://tibet-lhasa-potala.com/): The Roof of the World.
+- [Dunhuang & Jiuquan](https://dunhuang-jiuquan.com/): Silk Road dunes and the Mogao Caves.
+- [Dujiangyan Panda Base](https://dujiangyan-panda-base.com/): Giant pandas up close.

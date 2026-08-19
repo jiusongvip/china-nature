@@ -1,0 +1,177 @@
+---
+interface Destination {
+  name: string;
+  landscape: string;
+  landscapeLabel: string;
+  seasons: string[];
+  difficulty: string;
+  altitude: string;
+  days: string;
+  reason: string;
+  url?: string;
+  guide?: {
+    location: string;
+    ticket: string;
+    transport: string;
+    tips: string;
+  };
+}
+
+const { destinations = [] } = Astro.props as { destinations: Destination[] };
+
+const seasonLabels: Record<string, string> = {
+  spring: "Spring", summer: "Summer", autumn: "Autumn",
+  winter: "Winter", "year-round": "Year-round",
+};
+const difficultyLabels: Record<string, string> = {
+  easy: "Easy", moderate: "Moderate", challenging: "Challenging",
+};
+const altitudeLabels: Record<string, string> = {
+  low: "Low altitude", moderate: "1,500–3,000m", high: "3,000–4,500m", "very-high": "4,500m+",
+};
+
+const landscapes = [
+  { slug: "karst", label: "Karst" },
+  { slug: "danxia", label: "Danxia" },
+  { slug: "mountains", label: "Mountains" },
+  { slug: "lakes", label: "Lakes" },
+  { slug: "deserts", label: "Deserts" },
+  { slug: "grasslands", label: "Grasslands" },
+  { slug: "glaciers", label: "Glaciers" },
+  { slug: "forests", label: "Forests" },
+  { slug: "wetlands", label: "Wetlands" },
+  { slug: "plateau", label: "Plateau" },
+];
+---
+
+<div class="rounded-3xl border border-[#d5d0c4]/40 bg-white/80 backdrop-blur-sm p-6 shadow-sm md:p-8">
+  <!-- Filters -->
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <label for="f-landscape" class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#78716c]">Landscape</label>
+      <select id="f-landscape" class="w-full appearance-none rounded-xl border border-[#d5d0c4] bg-white px-4 py-3 text-sm font-medium text-[#1c1a16] outline-none transition-colors focus:border-[#14b8a6] focus:ring-2 focus:ring-[#14b8a6]/20">
+        <option value="all">All landscapes</option>
+        {landscapes.map((l) => <option value={l.slug}>{l.label}</option>)}
+      </select>
+    </div>
+    <div>
+      <label for="f-season" class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#78716c]">Season</label>
+      <select id="f-season" class="w-full appearance-none rounded-xl border border-[#d5d0c4] bg-white px-4 py-3 text-sm font-medium text-[#1c1a16] outline-none transition-colors focus:border-[#14b8a6] focus:ring-2 focus:ring-[#14b8a6]/20">
+        <option value="all">Any season</option>
+        <option value="spring">Spring</option>
+        <option value="summer">Summer</option>
+        <option value="autumn">Autumn</option>
+        <option value="winter">Winter</option>
+        <option value="year-round">Year-round</option>
+      </select>
+    </div>
+    <div>
+      <label for="f-difficulty" class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#78716c]">Difficulty</label>
+      <select id="f-difficulty" class="w-full appearance-none rounded-xl border border-[#d5d0c4] bg-white px-4 py-3 text-sm font-medium text-[#1c1a16] outline-none transition-colors focus:border-[#14b8a6] focus:ring-2 focus:ring-[#14b8a6]/20">
+        <option value="all">Any difficulty</option>
+        <option value="easy">Easy</option>
+        <option value="moderate">Moderate</option>
+        <option value="challenging">Challenging</option>
+      </select>
+    </div>
+    <div>
+      <label for="f-altitude" class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#78716c]">Altitude</label>
+      <select id="f-altitude" class="w-full appearance-none rounded-xl border border-[#d5d0c4] bg-white px-4 py-3 text-sm font-medium text-[#1c1a16] outline-none transition-colors focus:border-[#14b8a6] focus:ring-2 focus:ring-[#14b8a6]/20">
+        <option value="all">Any altitude</option>
+        <option value="low">Low altitude</option>
+        <option value="moderate">1,500–3,000m</option>
+        <option value="high">3,000–4,500m</option>
+        <option value="very-high">4,500m+</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mt-4 flex items-center justify-between">
+    <p class="text-sm text-[#5c5a4c]"><span id="trip-count" class="font-bold text-[#0f766e]">{destinations.length}</span> destinations</p>
+    <button id="trip-reset" class="rounded-full border border-[#d5d0c4] px-4 py-2 text-sm font-semibold text-[#5c5a4c] transition-colors hover:border-[#14b8a6] hover:text-[#0f766e]">Reset</button>
+  </div>
+
+  <!-- Results -->
+  <div id="trip-results" class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    {destinations.map((d) => (
+      <article
+        class="trip-card scroll-reveal flex flex-col rounded-2xl border border-[#d5d0c4]/40 bg-white p-5 shadow-sm transition-all duration-300"
+        data-landscape={d.landscape}
+        data-season={d.seasons.join(" ")}
+        data-difficulty={d.difficulty}
+        data-altitude={d.altitude}
+      >
+        <div class="mb-3 flex items-start justify-between gap-2">
+          <h4 class="text-lg font-bold leading-snug text-[#1c1a16]">{d.name}</h4>
+          <span class="shrink-0 rounded-full bg-[#ccfbf1]/60 px-2.5 py-1 text-[11px] font-semibold text-[#0f766e]">{d.landscapeLabel}</span>
+        </div>
+        <p class="text-sm leading-relaxed text-[#5c5a4c]">{d.reason}</p>
+        <div class="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 border-t border-[#d5d0c4]/50 pt-3 text-xs text-[#78716c]">
+          <span class="flex items-center gap-1.5"><i class="fa-regular fa-calendar text-[#14b8a6]"></i>{d.seasons.map((s) => seasonLabels[s] ?? s).join(" / ")}</span>
+          <span class="flex items-center gap-1.5"><i class="fa-regular fa-clock text-[#14b8a6]"></i>{d.days}</span>
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-person-hiking text-[#14b8a6]"></i>{difficultyLabels[d.difficulty]}</span>
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-mountain-sun text-[#14b8a6]"></i>{altitudeLabels[d.altitude]}</span>
+        </div>
+        {d.guide && (
+          <details class="qa mt-3">
+            <summary class="flex cursor-pointer items-center justify-between rounded-lg bg-[#f8f7f4] px-3 py-2 text-xs font-semibold text-[#0f766e]">
+              Plan this trip
+              <svg class="qa-chevron h-3.5 w-3.5" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </summary>
+            <div class="mt-2 space-y-1.5 px-1 text-xs text-[#5c5a4c]">
+              <p><i class="fa-solid fa-location-dot mr-1.5 text-[#14b8a6]"></i><strong class="text-[#1c1a16]">Location:</strong> {d.guide.location}</p>
+              <p><i class="fa-solid fa-ticket mr-1.5 text-[#14b8a6]"></i><strong class="text-[#1c1a16]">Cost:</strong> {d.guide.ticket}</p>
+              <p><i class="fa-solid fa-train mr-1.5 text-[#14b8a6]"></i><strong class="text-[#1c1a16]">Getting there:</strong> {d.guide.transport}</p>
+              <p><i class="fa-regular fa-lightbulb mr-1.5 text-[#14b8a6]"></i><strong class="text-[#1c1a16]">Tip:</strong> {d.guide.tips}</p>
+            </div>
+          </details>
+        )}
+        {d.url && (
+          <a href={d.url} target="_blank" rel="noopener" class="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[#0f766e] transition-colors hover:text-[#115e59]">
+            Read the full guide <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+          </a>
+        )}
+      </article>
+    ))}
+  </div>
+
+  <!-- Empty state -->
+  <div id="trip-empty" class="mt-6 hidden rounded-2xl border border-dashed border-[#d5d0c4] bg-[#f8f7f4] p-10 text-center">
+    <i class="fa-regular fa-face-frown text-3xl text-[#a8a29e]"></i>
+    <p class="mt-3 font-semibold text-[#1c1a16]">No match — try relaxing a filter.</p>
+    <p class="mt-1 text-sm text-[#5c5a4c]">Reset the filters to see all destinations.</p>
+  </div>
+</div>
+
+<script>
+  const selects = ["f-landscape", "f-season", "f-difficulty", "f-altitude"]
+    .map((id) => document.getElementById(id) as HTMLSelectElement | null)
+    .filter((s): s is HTMLSelectElement => s !== null);
+
+  function filter() {
+    const [landscape, season, difficulty, altitude] = selects.map((s) => s.value);
+    let visible = 0;
+    document.querySelectorAll<HTMLElement>(".trip-card").forEach((card) => {
+      const ok =
+        (landscape === "all" || card.dataset.landscape === landscape) &&
+        (season === "all" || (card.dataset.season ?? "").split(" ").includes(season)) &&
+        (difficulty === "all" || card.dataset.difficulty === difficulty) &&
+        (altitude === "all" || card.dataset.altitude === altitude);
+      card.style.display = ok ? "" : "none";
+      if (ok) visible++;
+    });
+    const count = document.getElementById("trip-count");
+    const empty = document.getElementById("trip-empty");
+    if (count) count.textContent = String(visible);
+    if (empty) empty.classList.toggle("hidden", visible > 0);
+  }
+
+  selects.forEach((s) => s.addEventListener("change", filter));
+  const reset = document.getElementById("trip-reset");
+  if (reset) {
+    reset.addEventListener("click", () => {
+      selects.forEach((s) => { s.value = "all"; });
+      filter();
+    });
+  }
+</script>

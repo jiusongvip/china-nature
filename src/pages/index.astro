@@ -1,0 +1,1026 @@
+---
+import Layout from "../layouts/Layout.astro";
+import TripFinder from "../components/TripFinder.astro";
+import Faq from "../components/Faq.astro";
+
+// ── 10 landform families (the differentiator) ──
+const landscapes = [
+  {
+    slug: "karst", name: "Karst", icon: "fa-mountain", gradient: "landscape-karst",
+    tagline: "Tower-like limestone peaks, caves and lazy rivers", places: "Guilin · Yangshuo · Yunnan Stone Forest",
+    intro: "Karst is the landscape you already know — the cone-shaped limestone peaks rising out of jade-green rivers that appear on every Chinese painting and banknote. It forms when mildly acidic rainwater slowly dissolves soluble limestone over millions of years, leaving behind towers, caves and underground rivers.",
+    spots: [
+      { name: "Guilin & Yangshuo", desc: "The classic karst scene. Cruise the Li River from Guilin to Yangshuo, then rent a bike and ride through rice paddies, or float a bamboo raft down the Yulong River.", season: "Apr–Nov", activity: "Cruise, cycling, bamboo raft", url: "https://guilin-yang-shuo.com" },
+      { name: "Yunnan Stone Forest", desc: "A UNESCO-listed forest of jagged limestone pinnacles near Kunming — some 30m tall — threaded with stone paths, caves and Yi minority villages.", season: "Year-round", activity: "Walking trails", url: "https://yunnan-province.com" },
+      { name: "Wulong Karst", desc: "Giant natural bridges, sinkholes and caves near Chongqing — an otherworldly backdrop used in films, and one of the largest karst systems on Earth.", season: "Apr–Oct", activity: "Hiking, cave tours" },
+    ],
+    bestWay: "Boat or raft is the classic way in — but renting a bike in Yangshuo gets you closer and away from the tour buses.",
+  },
+  {
+    slug: "danxia", name: "Danxia", icon: "fa-fire", gradient: "landscape-danxia",
+    tagline: "Rainbow-striped red cliffs that look painted", places: "Zhangye · Danxia Mountain · Langshan",
+    intro: "Danxia is China's most photogenic oddity — layered red sandstone carved by erosion into stripes of crimson, orange and cream that look airbrushed. The landform is named after the Danxia Mountains in Guangdong, but the most famous example is Zhangye's 'Rainbow Mountains'.",
+    spots: [
+      { name: "Zhangye Danxia", desc: "The Rainbow Mountains — vast ridges of striped red, yellow and green rock in Gansu. Colors are most saturated just after sunrise and before sunset.", season: "Year-round", activity: "Boardwalks, viewpoints" },
+      { name: "Danxia Mountain", desc: "The landform's namesake near Shaoguan, Guangdong — red cliffs, stone pillars and subtropical forest, with boat rides along the Jin River below.", season: "Oct–Dec", activity: "Hiking, river boat" },
+      { name: "Langshan", desc: "A quieter World Heritage danxia of red peaks and a dramatic river-cut gorge in Hunan, far from the Zhangye crowds.", season: "Apr–Oct", activity: "Hiking" },
+    ],
+    bestWay: "Visit at golden hour — low sun brings out the strata. Zhangye's boardwalks make it easy, but hiring a driver lets you beat the crowds.",
+  },
+  {
+    slug: "mountains", name: "Mountains", icon: "fa-mountain", gradient: "landscape-mountains",
+    tagline: "Granite spires, cloud seas and sacred summits", places: "Huangshan · Zhangjiajie · Fanjing",
+    intro: "China's scenic and sacred mountains are a category of their own — granite spires wreathed in cloud, stone staircases climbing to temples on the summit, and sunrises people wake in the dark to see. Some are pilgrimage sites; others are pure geology.",
+    spots: [
+      { name: "Huangshan", desc: "The 'loveliest mountain of China' — granite pines, grotesque rocks, hot springs and a famous sea of clouds. UNESCO-listed and the direct inspiration for classical ink painting.", season: "Year-round", activity: "Cable car + summit trails" },
+      { name: "Zhangjiajie", desc: "3,000 quartz-sandstone pillars rising out of subtropical forest — the 'floating mountains' of Avatar. Includes the world's tallest outdoor elevator and a glass-bottomed bridge.", season: "Apr–Nov", activity: "Elevator, glass bridge, trails", url: "https://zhangjiajie-national-park.com" },
+      { name: "Fanjingshan", desc: "A dramatic twin-peaked summit topped by Buddhist temples, reached by a near-vertical staircase above a sea of clouds in Guizhou.", season: "Apr–Nov", activity: "Staircase hike" },
+    ],
+    bestWay: "Plan at least one summit sunrise — it is the single best mountain experience in China. Cable cars save your legs, but queues are long in peak season.",
+  },
+  {
+    slug: "lakes", name: "Lakes", icon: "fa-water", gradient: "landscape-lakes",
+    tagline: "Turquoise alpine lakes and crystal-clear pools", places: "Jiuzhaigou · Qinghai Lake · Kanas",
+    intro: "China's alpine lakes are unlike anything at sea level — turquoise, emerald and sapphire pools formed by glacial runoff and mineral deposits, often framed by snow peaks. They are the country's most photographed water.",
+    spots: [
+      { name: "Jiuzhaigou", desc: "A UNESCO valley of over 100 tiered lakes and waterfalls in every shade of blue and green, backed by snow mountains and Tibetan villages.", season: "Sep–Oct", activity: "Boardwalk + shuttle bus" },
+      { name: "Qinghai Lake", desc: "China's largest lake — a vast saltwater mirror ringed by yellow rapeseed fields in summer, and a key stop on the Qinghai–Tibet route.", season: "Jun–Aug", activity: "Cycling, driving loop" },
+      { name: "Kanas", desc: "An emerald mountain lake in the far-northwest Altai, famous for autumn birch and larch forests and the mythical 'Kanas monster'.", season: "Sep–Oct", activity: "Boat, boardwalks, viewpoints" },
+    ],
+    bestWay: "Go in autumn for maximum color, and arrive at opening time — alpine lakes are calmest and most reflective before the wind picks up.",
+  },
+  {
+    slug: "deserts", name: "Deserts", icon: "fa-sun", gradient: "landscape-deserts",
+    tagline: "Singing dunes, oases and Silk Road silence", places: "Dunhuang · Badain Jaran · Taklimakan",
+    intro: "China's deserts are the sands of the ancient Silk Road — rolling dune fields, 'singing' sands, oasis lakes and the ruins of caravan towns. They stretch across the northwest from Gansu to Xinjiang.",
+    spots: [
+      { name: "Dunhuang & Mingsha Shan", desc: "The 'Singing Sand Dunes' rising behind a crescent-shaped oasis lake, gateway to the Mogao Caves' thousand-year-old Buddhist art.", season: "Apr–Jun, Sep–Oct", activity: "Camel ride, sandboarding, sunset", url: "https://dunhuang-jiuquan.com" },
+      { name: "Badain Jaran", desc: "The world's tallest stationary dunes — some 500m — hiding over 100 spring-fed lakes in Inner Mongolia, sacred to local herders.", season: "May–Oct", activity: "4WD desert tour" },
+      { name: "Taklimakan", desc: "One of Earth's largest sandy deserts, crossed by a remote desert highway — a vast, empty sea of dunes in Xinjiang.", season: "Apr–Oct", activity: "Desert highway drive" },
+    ],
+    bestWay: "Go at dawn or dusk when the sand glows and temperatures drop — and always take a licensed driver into the dunes.",
+  },
+  {
+    slug: "grasslands", name: "Grasslands", icon: "fa-leaf", gradient: "landscape-grassland",
+    tagline: "Endless steppe, galloping horses and yurts", places: "Hulunbuir · Zoige · Bayanbulak",
+    intro: "China's northern steppe is where the country turns green and endless — rolling grassland dotted with grazing sheep, galloping horses and white Mongolian yurts, under skies that seem to go on forever.",
+    spots: [
+      { name: "Hulunbuir", desc: "China's largest and lushest prairie in Inner Mongolia, along the Russian border — rivers, birch forests and horse-riding camps.", season: "Jun–Aug", activity: "Horse riding, yurt stays" },
+      { name: "Zoige", desc: "A high-altitude 'jade' grassland on the Sichuan–Gansu border, dotted with wildflowers, yaks and the first bend of the Yellow River.", season: "Jun–Aug", activity: "Scenic drives, horse riding" },
+      { name: "Bayanbulak", desc: "A vast alpine meadow in Xinjiang famous for its 'Nine Bends' river viewpoint at sunset and its wild swans.", season: "Jun–Sep", activity: "Sunset viewpoints" },
+    ],
+    bestWay: "Go in summer (June–August) when the grass is greenest, and stay overnight in a yurt to catch a star-filled sky.",
+  },
+  {
+    slug: "glaciers", name: "Glaciers", icon: "fa-snowflake", gradient: "landscape-glaciers",
+    tagline: "Ice falls, snow peaks and thermal springs", places: "Hailuogou · Rongbuk · Meili Snow",
+    intro: "China's glaciers are the frozen spine of its highest ranges — blue ice falls tumbling between peaks and snow mountains that mark the Roof of the World. Several are accessible at unusually low altitude.",
+    spots: [
+      { name: "Hailuogou", desc: "A rare low-altitude glacier in Sichuan with a 1,000m ice fall, reached by cable car and paired with natural hot springs.", season: "Nov–Apr", activity: "Cable car, hot springs" },
+      { name: "Rongbuk Glacier", desc: "The glacier below Everest's north face in Tibet — the closest most travelers ever get to the world's highest peak.", season: "Apr–Jun, Sep–Oct", activity: "Base-camp road" },
+      { name: "Meili Snow Mountain", desc: "A sacred 6,740m peak range in Yunnan known for the 'sunrise on golden mountain' effect over Kawagebo.", season: "Oct–Mar", activity: "Viewpoints" },
+    ],
+    bestWay: "Winter and early spring give the clearest glacier views — summer clouds often hide the peaks.",
+  },
+  {
+    slug: "forests", name: "Forests", icon: "fa-tree", gradient: "landscape-forests",
+    tagline: "Ancient woodlands, bamboo seas and rainforest", places: "Shennongjia · Xishuangbanna · Shunan",
+    intro: "China's forests range from the misty primeval woodlands of the center to the last tropical rainforest in the south — refuges for pandas, golden monkeys and wild elephants.",
+    spots: [
+      { name: "Shennongjia", desc: "A mysterious UNESCO-listed primeval forest in Hubei — deep canyons, cloud forest and the golden snub-nosed monkey.", season: "May–Oct", activity: "Trails, monkey viewing" },
+      { name: "Xishuangbanna", desc: "China's only tropical rainforest in southern Yunnan — wild Asian elephants, tea mountains and Dai culture.", season: "Nov–Apr", activity: "Botanical gardens, elephant valley", url: "https://yunnan-province.com" },
+      { name: "Shunan Bamboo Sea", desc: "A 120 km² ocean of emerald bamboo in Sichuan, crisscrossed by quiet paths, waterfalls and a lake to boat across.", season: "Year-round", activity: "Walking, boating" },
+    ],
+    bestWay: "Visit Shennongjia in autumn for mist and color; Xishuangbanna in winter for dry, cool jungle weather.",
+  },
+  {
+    slug: "wetlands", name: "Wetlands", icon: "fa-droplet", gradient: "landscape-wetlands",
+    tagline: "Bird sanctuaries, marshes and river deltas", places: "Yellow River Delta · Zoige Marshes",
+    intro: "China's wetlands are the meeting of water and land — river deltas, marshes and reed beds that rank among the world's most important stopovers for migratory birds.",
+    spots: [
+      { name: "Yellow River Delta", desc: "Where the Yellow River empties into the Bohai Sea — a UNESCO-listed sanctuary for migratory birds, and a 'red carpet' of suaeda plants each autumn.", season: "Sep–Nov", activity: "Boardwalks, birdwatching" },
+      { name: "Zoige Marshes", desc: "High-altitude peat bogs on the Tibetan plateau — the source of the Yellow River and home to black-necked cranes.", season: "Jun–Aug", activity: "Birdwatching" },
+      { name: "Yancheng", desc: "Coastal wetlands in Jiangsu protecting the red-crowned crane and the endangered milu deer.", season: "Nov–Feb", activity: "Crane viewing" },
+    ],
+    bestWay: "Bring binoculars and go in migration season — autumn (Sep–Nov) is peak for birds and the red suaeda carpet.",
+  },
+  {
+    slug: "plateau", name: "Plateau", icon: "fa-earth-asia", gradient: "landscape-plateau",
+    tagline: "The Roof of the World — high plains and peaks", places: "Tibet · Shangri-La · Hoh Xil",
+    intro: "The Tibetan Plateau — the 'Roof of the World' — is a world apart: high plains at 4,000m, turquoise sacred lakes, glacier-topped ranges and monasteries clinging to cliffs. Altitude is part of the experience.",
+    spots: [
+      { name: "Lhasa & Tibet", desc: "The plateau's cultural heart — Potala Palace, Jokhang Temple, and the turquoise lakes and passes of the high Himalaya.", season: "May–Oct", activity: "Sightseeing, overland drives", url: "https://tibet-lhasa-potala.com" },
+      { name: "Shangri-La", desc: "A Tibetan town at 3,200m in Yunnan — Songzanlin Monastery, alpine lakes and snow-capped gorges of the Meili range.", season: "Apr–Nov", activity: "Monastery visits, hiking", url: "https://shangri-la-yunnan.com" },
+      { name: "Hoh Xil", desc: "A vast, empty UNESCO wilderness in Qinghai — home to the Tibetan antelope and one of the wildest places left in China.", season: "Jun–Sep", activity: "Overland traverse" },
+    ],
+    bestWay: "Acclimatize first (one night at ~3,000m), go May–October to avoid snow, and carry a warm layer even in summer.",
+  },
+];
+
+// ── Trip Finder destinations ──
+const destinations = [
+  { name: "Guilin & Yangshuo", landscape: "karst", landscapeLabel: "Karst", seasons: ["spring", "summer", "autumn"], difficulty: "easy", altitude: "low", days: "3–4 days", reason: "Iconic karst peaks, bamboo rafts and bike rides through rice fields — the classic China postcard.", guide: { location: "Guangxi, southern China", ticket: "Li River cruise ~CNY 360; parks from CNY 60", transport: "Fly to Guilin (KWL) or high-speed rail from Guangzhou (2.5h)", tips: "Skip the big boats — a Yulong River bamboo raft is quieter and prettier" }, url: "https://guilin-yang-shuo.com" },
+  { name: "Zhangjiajie", landscape: "mountains", landscapeLabel: "Mountains", seasons: ["spring", "autumn"], difficulty: "moderate", altitude: "low", days: "3 days", reason: "3,000 sandstone pillars that inspired Avatar, plus the world's tallest outdoor elevator.", guide: { location: "Hunan, 32km from Zhangjiajie city", ticket: "Forest park ~CNY 225 (4-day); elevators extra", transport: "High-speed rail to Zhangjiajie West, then shuttle to Wulingyuan gate", tips: "Stay in Wulingyuan and enter at opening time to beat elevator queues" }, url: "https://zhangjiajie-national-park.com" },
+  { name: "Jiuzhaigou Valley", landscape: "lakes", landscapeLabel: "Lakes", seasons: ["autumn"], difficulty: "easy", altitude: "moderate", days: "2–3 days", reason: "Unreal turquoise lakes, waterfalls and snow peaks in a Tibetan valley — best in autumn color.", guide: { location: "Sichuan, 400km north of Chengdu", ticket: "~CNY 169–280; advance reservation required", transport: "Fly from Chengdu (1h) or bus (8h); book tickets online first", tips: "Go in late October for peak color, enter at 7am, buy tickets days ahead" } },
+  { name: "Huangshan", landscape: "mountains", landscapeLabel: "Mountains", seasons: ["year-round"], difficulty: "moderate", altitude: "moderate", days: "2–3 days", reason: "The 'loveliest mountain of China' — granite pines, cloud seas and sunrise above the mist.", guide: { location: "Anhui, 1.5h from Huangshan city", ticket: "~CNY 190 + cable cars ~CNY 80–90", transport: "High-speed rail to Huangshan North, then bus to the scenic area", tips: "Stay one night on the summit to catch sunrise without the dawn climb" } },
+  { name: "Zhangye Danxia", landscape: "danxia", landscapeLabel: "Danxia", seasons: ["year-round"], difficulty: "easy", altitude: "low", days: "1–2 days", reason: "Rainbow-striped hills that look like a painting — most vivid at sunrise and sunset.", guide: { location: "Gansu, 40km from Zhangye city", ticket: "~CNY 75 + shuttle bus", transport: "Fly or high-speed rail to Zhangye, then taxi to the park", tips: "Go at sunset; the west gate has shorter lines than the main entrance" } },
+  { name: "Dunhuang & Gobi", landscape: "deserts", landscapeLabel: "Deserts", seasons: ["spring", "autumn"], difficulty: "easy", altitude: "low", days: "3 days", reason: "Singing sand dunes, the Crescent Lake oasis and Mogao Caves on the Silk Road.", guide: { location: "Gansu, far west on the Silk Road", ticket: "Mogao Caves from CNY 238 (book ahead); dunes ~CNY 110", transport: "Fly to Dunhuang from Lanzhou/Xi'an, or overnight train", tips: "Mogao Caves sells out — reserve a week ahead; hit the dunes at dusk" }, url: "https://dunhuang-jiuquan.com" },
+  { name: "Hulunbuir Grassland", landscape: "grasslands", landscapeLabel: "Grasslands", seasons: ["summer"], difficulty: "easy", altitude: "low", days: "3 days", reason: "China's largest prairie — endless green, horse riding and Mongolian yurt stays in summer.", guide: { location: "Inner Mongolia, on the Russian border", ticket: "Grassland access via tour/camp, ~CNY 100–300", transport: "Fly to Hailar (HLD) from Beijing, then rent a car or join a tour", tips: "Go June–August for green grass; book yurt stays ahead in July" } },
+  { name: "Hailuogou Glacier", landscape: "glaciers", landscapeLabel: "Glaciers", seasons: ["winter", "spring"], difficulty: "moderate", altitude: "high", days: "2–3 days", reason: "A rare low-altitude glacier with an ice fall, hot springs and views of Mount Gongga.", guide: { location: "Sichuan, 300km from Chengdu", ticket: "~CNY 90 + cable car CNY 150", transport: "Bus from Chengdu (6h) via Luding, or drive", tips: "Winter has the clearest views; book the hot-spring hotel inside the park" } },
+  { name: "Xishuangbanna", landscape: "forests", landscapeLabel: "Forests", seasons: ["winter", "spring"], difficulty: "easy", altitude: "low", days: "3 days", reason: "China's only tropical rainforest — wild elephants, tea mountains and Dai culture.", guide: { location: "Yunnan, on the Laos border", ticket: "Botanical Garden ~CNY 75; Elephant Valley ~CNY 80", transport: "Fly to Jinghong (JHG) from Kunming or Chongqing", tips: "Come in winter for dry, cool weather; see elephants at morning feeding" }, url: "https://yunnan-province.com" },
+  { name: "Yellow River Delta", landscape: "wetlands", landscapeLabel: "Wetlands", seasons: ["autumn", "winter"], difficulty: "easy", altitude: "low", days: "1–2 days", reason: "A migratory-bird sanctuary where the Yellow River meets the sea — a red suaeda 'carpet' in autumn.", guide: { location: "Shandong, at the Yellow River mouth", ticket: "~CNY 60–90", transport: "Drive or take a bus from Dongying city", tips: "Autumn (Sep–Nov) brings the red suaeda carpet and peak bird migration" } },
+  { name: "Shangri-La", landscape: "plateau", landscapeLabel: "Plateau", seasons: ["spring", "autumn"], difficulty: "moderate", altitude: "high", days: "3–4 days", reason: "Tibetan plateau at 3,200m — alpine lakes, monasteries and snow-capped gorges.", guide: { location: "Yunnan, at 3,200m altitude", ticket: "Songzanlin Monastery ~CNY 90; Pudacuo Park ~CNY 100", transport: "Fly to Diqing (DIG) from Kunming/Chengdu, or bus from Lijiang", tips: "Spend the first night acclimatizing; carry layers even in summer" }, url: "https://shangri-la-yunnan.com" },
+  { name: "Tibet & Lhasa", landscape: "plateau", landscapeLabel: "Plateau", seasons: ["summer", "autumn"], difficulty: "challenging", altitude: "very-high", days: "4–7 days", reason: "The Roof of the World — Potala Palace, turquoise lakes and Himalayan passes.", guide: { location: "Tibet Autonomous Region, 3,650m altitude", ticket: "Potala Palace ~CNY 200 (book ahead)", transport: "Fly to Lhasa from Chengdu/Xi'an, or the Qinghai–Tibet railway", tips: "Foreign travelers need a Tibet permit via an agency; acclimatize 2 days in Lhasa" }, url: "https://tibet-lhasa-potala.com" },
+];
+
+// ── Comparison table ──
+const comparison = {
+  columns: ["Zhangjiajie", "Guilin & Yangshuo", "Jiuzhaigou"],
+  rows: [
+    { label: "Landscape", values: ["Sandstone pillar forest", "Karst peaks & rivers", "Alpine lakes & waterfalls"] },
+    { label: "Best season", values: ["Apr–Oct", "Apr–Nov", "Sep–Oct"] },
+    { label: "Difficulty", values: ["Moderate", "Easy", "Easy"] },
+    { label: "Altitude", values: ["Low", "Low", "~2,000–3,000m"] },
+    { label: "Days needed", values: ["3 days", "3–4 days", "2–3 days"] },
+    { label: "Best for", values: ["Adventure & drama", "Easy scenery & cycling", "Photography & color"] },
+    { label: "Verdict", values: ["Pick for wow-factor peaks", "Pick for first-timers", "Pick for unreal lakes"] },
+  ],
+};
+
+// ── Wildlife ──
+const wildlife = [
+  { name: "Giant Panda", initial: "P", where: "Sichuan — Wolong & Chengdu bases", fact: "~1,800 left in the wild", detail: "See pandas at the Chengdu Panda Base (easy day trip) or the less-crowded Dujiangyan base. Go at 8–10am when pandas are most active and feeding. For a near-wild experience, Wolong Nature Reserve's forested enclosures are the closest thing.", url: "https://dujiangyan-panda-base.com" },
+  { name: "Snow Leopard", initial: "S", where: "Tibet & Qinghai plateau", fact: "The ghost of the mountains", detail: "Almost impossible to see in the wild — your best odds are winter wildlife-watching trips in Qinghai's Sanjiangyuan region, with local trackers, spotting scopes and a lot of patience." },
+  { name: "Golden Snub-nosed Monkey", initial: "G", where: "Sichuan, Shaanxi & Hubei", fact: "Blue-faced mountain acrobats", detail: "Easily seen in Shennongjia (Hubei) and the Qinling Mountains — blue-faced monkeys with golden fur that come close to winter feeding stations." },
+  { name: "Tibetan Antelope", initial: "T", where: "Hoh Xil, Qinghai", fact: "Saved from near-extinction", detail: "Spot herds grazing along the Qinghai–Tibet railway and highway through Hoh Xil, especially in the summer calving season (June–July)." },
+  { name: "Red-crowned Crane", initial: "C", where: "NE China wetlands", fact: "Symbol of luck & longevity", detail: "Winter (Nov–Feb) is peak viewing at Yancheng and Zhalong reserves, where cranes gather in the hundreds — arrive at dawn to see their courtship dances." },
+  { name: "Siberian Tiger", initial: "T", where: "NE China — Hunchun", fact: "Fewer than 60 in the wild", detail: "The rarest sight of all. Your best bet is the Hunchun Tiger–Leopard National Park in Jilin, or the breeding centers near Harbin." },
+];
+
+// ── Seasons ──
+const seasons = [
+  { name: "Spring", months: "Mar–May", icon: "fa-seedling", desc: "Mild temperatures and blooming flowers make spring the safest all-round choice. Karst turns lush green and mountain paths reopen after winter. Watch for May public holidays, which spike domestic travel.", best: "Karst, mountains, flowers" },
+  { name: "Summer", months: "Jun–Aug", icon: "fa-sun", desc: "Hot and humid in the south (30°C+), but the grasslands and high plateau hit their prime — cool, green and full of wildflowers. Rivers run high for rafting. Expect afternoon storms.", best: "Grasslands, plateau, rivers" },
+  { name: "Autumn", months: "Sep–Nov", icon: "fa-leaf", desc: "The golden season — crisp air and the year's best light. Lakes go mirror-still, forests turn red and gold, and danxia colors peak. Avoid the first week of October (Golden Week), when prices triple.", best: "Lakes, forests, danxia" },
+  { name: "Winter", months: "Dec–Feb", icon: "fa-snowflake", desc: "Snow, hot springs and empty viewpoints. Hotels are cheap and crowds vanish — but the north is bitterly cold and some high passes close. Best for snow scenery, glaciers and misty karst.", best: "Snow, hot springs, ice" },
+];
+
+// ── Itineraries ──
+const itineraries = [
+  { days: "5 days", title: "Classic South", route: "Guilin → Yangshuo → Zhangjiajie", note: "Karst + pillar peaks. Easy to moderate, low altitude." },
+  { days: "7 days", title: "West & Plateau", route: "Chengdu → Jiuzhaigou → Lhasa", note: "Lakes, pandas and the Roof of the World. Allow acclimatization." },
+  { days: "10 days", title: "North & Wild", route: "Beijing → Dunhuang → Hulunbuir", note: "Desert, Silk Road and endless steppe. Best in summer–autumn." },
+];
+
+// ── Practical essentials ──
+const practical = [
+  { icon: "fa-passport", color: "#0f766e", title: "Visa", desc: "76 countries get visa-free entry; 55 more qualify for 240-hour (10-day) transit. US citizens need an L visa ($140, 10-year multiple-entry). Verify the latest list for your passport before booking." },
+  { icon: "fa-ticket", color: "#14b8a6", title: "Tickets", desc: "Jiuzhaigou requires online reservation with a daily visitor cap — book days ahead. Zhangjiajie and Huangshan sell out in peak season. Most tickets are digital QR codes linked to your passport." },
+  { icon: "fa-mountain-sun", color: "#d4a373", title: "Altitude", desc: "Above 3,000m, ascend gradually and acclimatize 1–2 nights before going higher. Hydrate, skip alcohol, and descend if headaches or breathlessness worsen." },
+  { icon: "fa-credit-card", color: "#78716c", title: "Money & Payments", desc: "Alipay and WeChat Pay are everywhere; add an international card before you fly. Keep cash (small notes) as backup for rural areas, and tell your bank you're traveling." },
+];
+
+// ── Month-by-month guide ──
+const monthlyGuide = [
+  { m: "Jan", tip: "Ice festivals in Harbin; misty karst in Guilin" },
+  { m: "Feb", tip: "Snow on Huangshan; quiet, cheap and cold" },
+  { m: "Mar", tip: "Spring blooms; karst turns green" },
+  { m: "Apr", tip: "Peak season begins — mild and clear" },
+  { m: "May", tip: "Green mountains; avoid May public holidays" },
+  { m: "Jun", tip: "Grasslands hit their prime; south gets hot" },
+  { m: "Jul", tip: "Plateau and grasslands; monsoon in the south" },
+  { m: "Aug", tip: "Hulunbuir and Qinghai at their best" },
+  { m: "Sep", tip: "Autumn begins; lakes and forests turn gold" },
+  { m: "Oct", tip: "Peak color — but skip Oct 1–7 Golden Week" },
+  { m: "Nov", tip: "Danxia and lakes at peak; fewer crowds" },
+  { m: "Dec", tip: "Snow, glaciers and hot springs; cheapest flights" },
+];
+
+// ── FAQ (15, ~150 words each, covers long-tail) ──
+const faqItems = [
+  { q: "What is the best nature destination in China for first-time visitors?", a: "Guilin and Yangshuo. They combine the two things first-timers want most — iconic scenery and easy logistics. The karst peaks are the landscape you already know from Chinese paintings, the infrastructure is mature (airport, high-speed rail, English-friendly guesthouses), and you can experience it by bamboo raft, bike or on foot with almost no fitness required. Spend 3–4 days, and pair it with Zhangjiajie or a city like Beijing or Shanghai. Jiuzhaigou is more beautiful but harder to reach and altitude is a factor. Zhangjiajie is more dramatic but involves more climbing and queues." },
+  { q: "Guilin, Zhangjiajie or Jiuzhaigou — which one should I choose?", a: "Pick by what you value most. Guilin/Yangshuo is the easiest and most relaxing — river cruises, cycling, rice terraces. Zhangjiajie is for drama and adventure — the floating Avatar peaks, glass bridges and cliff walks. Jiuzhaigou is for pure photographic wow — unreal turquoise lakes and waterfalls, but it is remote, seasonal and altitude-affected. If you can only do one: Guilin for ease, Zhangjiajie for spectacle, Jiuzhaigou for color. If you have 10+ days, you can do two of them back-to-back by high-speed rail or a short flight." },
+  { q: "How many days do I need for a nature trip in China?", a: "Most single destinations need 2–3 days on the ground. Guilin and Yangshuo: 3–4 days. Zhangjiajie: 3 days. Jiuzhaigou: 2–3 days (plus travel). Huangshan: 2 days. For a multi-stop nature route, budget 5–10 days. China is large, so build in half a day of travel between stops. A realistic 'best of China nature' first trip is 7–10 days covering two regions — for example Guilin + Zhangjiajie, or Chengdu (pandas) + Jiuzhaigou." },
+  { q: "What is the best time of year to visit China for nature?", a: "Spring (March–May) and autumn (September–November) are the sweet spots across most of China — mild temperatures, clear skies and the best colors. Autumn (late September to October) is the single best window for lakes and forests, but avoid the first week of October (Golden Week), when everything is packed and prices triple. Summer suits the grasslands and high plateau. Winter is quiet, cheap and misty — great for snow scenery and hot springs but not for lush green landscapes." },
+  { q: "Do I need a visa to visit China?", a: "China currently offers visa-free entry to citizens of 76 countries, plus 240-hour (10-day) visa-free transit for travelers from 55 countries at 65 entry ports — including Guilin and Nanning. US citizens still need a tourist (L) visa, $140 for a 10-year multiple-entry. The visa-free and transit lists change frequently, so always check the latest rules for your passport on the official Chinese embassy site before booking, and apply 4–6 weeks ahead if a visa is required." },
+  { q: "Can I see giant pandas in the wild?", a: "Seeing a panda in the true wild is extremely rare — even researchers rarely spot them. What travelers actually do is visit panda bases and reserves, where pandas live in large, semi-natural forest enclosures. The best are Chengdu's Panda Base (easy, day trip) and the Dujiangyan Panda Base (volunteer programs, less crowded). Wolong Nature Reserve in Sichuan offers the closest thing to 'wild' viewing with forested mountain enclosures. Go in the early morning (8–10am) when pandas are most active and feeding." },
+  { q: "Is it safe to hike in China's national parks?", a: "Yes, on maintained trails. China's major parks — Huangshan, Zhangjiajie, Jiuzhaigou — have boardwalks, stone steps, railings and clear signage. The risks are the same as hiking anywhere: slippery steps after rain, altitude on high routes, and underestimating distances. Stay on marked paths, wear proper shoes, carry water, and avoid off-trail scrambling on remote peaks without a guide. For remote treks (Tiger Leaping Gorge, Hailuogou, Meili Snow Mountain), go with a licensed guide or join a group." },
+  { q: "How do I deal with altitude sickness on the Tibetan plateau?", a: "Ascend gradually and give your body time. Fly to a mid-altitude city (Chengdu or Kunming) and acclimatize before going higher. Once above ~3,000m: take it easy for the first 24–48 hours, avoid alcohol and heavy meals, drink plenty of water, and sleep at the lowest altitude you can manage. Over-the-counter acetazolamide (Diamox) helps many travelers when started a day before ascent. If symptoms worsen (severe headache, vomiting, breathlessness), descend — that is the only real cure. Consult a doctor before any high-altitude trip." },
+  { q: "Do I need to book national park tickets in advance?", a: "Yes, for the big ones. Jiuzhaigou strictly requires online reservation with a daily visitor cap — buy tickets on the official app or via a hotel days ahead, especially in autumn. Zhangjiajie and Huangshan tickets can often be bought at the gate but sell out in peak season. Golden Week (Oct 1–7) and summer weekends require booking everything in advance. Note that Chinese parks often require passport registration at purchase, and most tickets are now digital QR codes linked to your passport or a Chinese phone app." },
+  { q: "How do I get between nature destinations in China?", a: "China's high-speed rail network is the fastest, cheapest and most reliable way to connect destinations. Guilin, Zhangjiajie, Huangshan and Chengdu all have high-speed stations with frequent trains to major cities. Remote areas (Jiuzhaigou, Shangri-La, Kanas) are reached by domestic flights from Chengdu, Kunming or Xi'an. Trains bookable 15 days ahead on Trip.com or the official 12306 app; flights are often cheaper than you expect. Allow half a day for any transfer, and note that many stations are outside the city center." },
+  { q: "What should I pack for a China nature trip?", a: "Broken-in walking shoes are non-negotiable — you will climb thousands of steps. Add: layers (mountain mornings are cold even in summer), a light rain jacket, sunscreen and a hat, a power bank (you will navigate and pay by phone), passport and printed visa/hotel copies, any regular medication, and cash as backup (small notes for rural areas). If going above 3,000m, pack a warm layer and altitude medication. Leave room in your bag — you will buy tea, snacks and souvenirs." },
+  { q: "Is China safe for solo nature travelers?", a: "China is one of the safest countries for solo travelers — violent crime against tourists is extremely rare, and solo women generally report feeling safe even at night. The real challenges are practical, not safety-related: the language barrier, paying without a Chinese bank card, and navigating apps that require a local number. In remote areas, tell your accommodation your route and expected return time before setting out. Common sense — the same you would use anywhere — is all you need." },
+  { q: "Can I use Google Maps and WhatsApp in China?", a: "Google Maps and WhatsApp do not work on Chinese networks without a VPN, and many VPNs are unreliable inside China. The practical fix most travelers use: a travel eSIM from Hong Kong or a roaming data plan, which usually routes around the block and lets Google/WhatsApp/Instagram work normally. For maps, download Amap or Baidu Maps (English support is limited) or use Apple Maps, which works reasonably in China. Set up Alipay/WeChat Pay and download any VPN before you fly." },
+  { q: "How much does a nature trip in China cost?", a: "China offers excellent value. A comfortable mid-range nature trip runs about $60–120 per person per day, including a private room, meals, park tickets and transport. Budget travelers can do $30–50/day in hostels. National park entrance tickets are the hidden cost — typically $15–40 per park, plus shuttle buses and cable cars that can double the ticket. Flights and high-speed rail between destinations are the other main expense. A realistic 7-day, two-destination trip is roughly $800–1,500 per person excluding international flights." },
+  { q: "Are China's national parks crowded?", a: "The famous ones can be, especially in summer and during Golden Week (Oct 1–7), when domestic tourism surges. Zhangjiajie and Huangshan see long queues for cable cars and viewpoints on peak days. The fix is timing: visit on weekdays, arrive at opening time (most parks open 6–7am), and avoid national holidays. Jiuzhaigou caps daily visitors, so it never feels as chaotic. Dozens of lesser-known parks — Fanjingshan, Kanas, Hailuogou, Xishuangbanna — offer equally stunning scenery with a fraction of the crowds." },
+  { q: "What food should I try at China's nature destinations?", a: "Each landscape region has its own kitchen. In Guilin, eat Guilin rice noodles for breakfast and beer fish by the Li River. In Zhangjiajie, try sanxiaguo — a sizzling hotpot of cured meats. Sichuan is hotpot and mapo tofu; Jiuzhaigou adds Tibetan yak dishes. On the Silk Road in Dunhuang, order donkey-meat yellow noodles and lamb soup. In Yunnan, try crossing-the-bridge noodles and Dai-style grilled fish; in Tibet, yak momos and sweet tea. Tipping is not expected anywhere, and meals at the park gate are the worst value — walk into town and eat where locals do." },
+  { q: "Where should I stay when visiting parks like Zhangjiajie or Jiuzhaigou?", a: "Stay at the park gate, not in the city. In Zhangjiajie, book in Wulingyuan town by the east gate — staying in Zhangjiajie city adds a 40-minute shuttle each way. In Jiuzhaigou there is no lodging inside the park, so book in Zhangzha village at the entrance. In Huangshan, spend one night on the summit (Beihai or Paiyunlou hotel) to catch sunrise — book weeks ahead. Book 1–2 months early for October Golden Week, Chinese New Year and July–August. Every hotel registers your passport at check-in, which is normal and required." },
+  { q: "Is Chinese food spicy? Can I eat vegetarian or halal?", a: "Spice is regional, not universal. Sichuan and Hunan food is famously hot — say 'bù là' (not spicy) to tone it down. Cantonese and Yunnan food are much milder. Vegetarian options exist in cities and at Buddhist temples ('wǒ chī sù' means 'I eat vegetarian'), but rural meat-heavy regions are harder — print an allergy card in Chinese. Halal food is widely available in the northwest (Gansu, Ningxia, Xinjiang), where lamb and noodles dominate. Street food is generally safe if you stick to busy stalls." },
+  { q: "What should I wear for China's different landscapes?", a: "Match clothing to climate zone, not just the season. High plateau (Tibet, Shangri-La, Jiuzhaigou): thermals, fleece or down, windproof shell, hat and SPF 50 — cold mornings and fierce sun even in summer. Desert (Dunhuang): loose long sleeves, a scarf for sand, closed shoes — hot days, freezing nights. Subtropical south (Guilin, Zhangjiajie): quick-dry layers and a rain jacket — hot, humid, sudden downpours. Northern grassland (Hulunbuir): layers plus a warm fleece for cold evenings even in July. Broken-in walking shoes, sunscreen and a power bank cover almost everything else." },
+  { q: "Do I need to book trains, flights and hotels in advance?", a: "Yes, for anything in peak season. Train tickets open 15 days ahead at 8am Beijing time and popular routes sell out — book via Trip.com or the 12306 app. Domestic flights to remote parks (Jiuzhaigou, Shangri-La, Kanas) are often cheap but should be booked early for holidays. Hotels next to park gates sell out first; book 1–2 months ahead for Golden Week (Oct 1–7), Chinese New Year and July–August. National-park tickets (Jiuzhaigou especially) and Huangshan summit hotels are the scarcest — lock those before anything else." },
+];
+
+// ── Schema ──
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqItems.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
+};
+
+const collectionSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "China Nature — Ultimate Guide to Natural Wonders & Parks",
+  url: "https://www.china-nature.com/",
+  description: "Discover China's nature — karst peaks, danxia cliffs, glaciers, deserts, lakes and wildlife. Find your perfect landscape with the trip finder, comparisons and itineraries.",
+  inLanguage: "en",
+};
+
+const destinationSchema = {
+  "@context": "https://schema.org",
+  "@type": "TouristDestination",
+  name: "China Nature",
+  url: "https://www.china-nature.com/",
+  description: "Independent guide to China's natural landscapes — karst, danxia, mountains, lakes, deserts, grasslands, glaciers, forests, wetlands and plateau. Find the right destination with the trip finder.",
+  inLanguage: "en",
+};
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "China Nature: The Complete Guide to Natural Wonders, Parks & Wildlife",
+  author: { "@type": "Person", name: "Alex Chen" },
+  datePublished: "2026-08-19",
+  dateModified: "2026-08-19",
+  image: "https://www.china-nature.com/images/og.jpg",
+  inLanguage: "en",
+};
+
+// ── Quick decision tree ──
+const decisionTree = [
+  { if: "Only 5 days and it's your first time", then: "Guilin & Yangshuo", why: "no altitude, easy logistics, the postcard scene" },
+  { if: "You want drama and don't mind steps", then: "Zhangjiajie", why: "Avatar's floating peaks and a glass bridge" },
+  { if: "You're a photographer chasing color", then: "Jiuzhaigou in autumn", why: "turquoise lakes at their peak" },
+  { if: "You want snow and glaciers", then: "Hailuogou in winter", why: "a low-altitude glacier plus hot springs" },
+  { if: "You love wildlife", then: "Chengdu pandas + Wolong", why: "the closest thing to wild pandas" },
+  { if: "You fear altitude but want lakes", then: "Jiuzhaigou over Tibet", why: "same wow factor, far lower risk" },
+];
+
+// ── Traveler type cards ──
+const travelerTypes = [
+  { icon: "fa-plane", label: "First-timer", pick: "Guilin & Yangshuo", why: "The easiest intro to China's nature — no altitude, mature infrastructure, and the landscape you already know from photos.", days: "3–4 days" },
+  { icon: "fa-camera", label: "Photographer", pick: "Jiuzhaigou + Zhangye Danxia", why: "The two most photogenic spots in China — mirror-still turquoise lakes and airbrushed rainbow cliffs.", days: "4–5 days" },
+  { icon: "fa-person-hiking", label: "Hiker", pick: "Huangshan + Tiger Leaping Gorge", why: "Granite summit sunrises and Asia's most famous gorge trail — serious climbs with serious rewards.", days: "4–6 days" },
+  { icon: "fa-people-group", label: "Family", pick: "Chengdu pandas + Guilin", why: "Pandas in the morning, bamboo rafts in the afternoon — low effort, high reward for kids.", days: "5–6 days" },
+  { icon: "fa-binoculars", label: "Wildlife lover", pick: "Sichuan + Qinghai", why: "Pandas in Sichuan, then Tibetan antelope and snow-leopard country on the plateau.", days: "7–10 days" },
+];
+
+// ── 14 World Natural Heritage sites ──
+const heritageSites = [
+  { name: "Wulingyuan Scenic Area (Hunan)", url: "https://whc.unesco.org/en/list/640" },
+  { name: "Jiuzhaigou Valley (Sichuan)", url: "https://whc.unesco.org/en/list/637" },
+  { name: "Huanglong Scenic Area (Sichuan)", url: "https://whc.unesco.org/en/list/638" },
+  { name: "Three Parallel Rivers of Yunnan", url: "https://whc.unesco.org/en/list/1083" },
+  { name: "Sichuan Giant Panda Sanctuaries", url: "https://whc.unesco.org/en/list/1213" },
+  { name: "South China Karst (Yunnan–Guizhou–Chongqing)", url: "https://whc.unesco.org/en/list/1248" },
+  { name: "Mount Sanqingshan (Jiangxi)", url: "https://whc.unesco.org/en/list/1292" },
+  { name: "China Danxia (multiple provinces)", url: "https://whc.unesco.org/en/list/1335" },
+  { name: "Chengjiang Fossil Site (Yunnan)", url: "https://whc.unesco.org/en/list/1388" },
+  { name: "Xinjiang Tianshan", url: "https://whc.unesco.org/en/list/1414" },
+  { name: "Shennongjia (Hubei)", url: "https://whc.unesco.org/en/list/1509" },
+  { name: "Hoh Xil (Qinghai)", url: "https://whc.unesco.org/en/list/1540" },
+  { name: "Fanjingshan (Guizhou)", url: "https://whc.unesco.org/en/list/1559" },
+  { name: "Migratory Bird Sanctuaries (Yellow Sea–Bohai)", url: "https://whc.unesco.org/en/list/1606" },
+];
+
+// ── Sister-site network (hub ↔ spoke) ──
+const sisterSites = [
+  { name: "Guilin & Yangshuo", url: "https://guilin-yang-shuo.com", tag: "Karst", desc: "Li River cruises, bamboo rafts and bike rides through rice paddies — the classic China postcard.", icon: "fa-mountain" },
+  { name: "Zhangjiajie National Park", url: "https://zhangjiajie-national-park.com", tag: "Mountains", desc: "3,000 sandstone pillars that inspired Avatar — elevators, glass bridges and cloud forests.", icon: "fa-mountain" },
+  { name: "Yunnan Province", url: "https://yunnan-province.com", tag: "Plateau & forests", desc: "Stone Forest, rice terraces, tropical Xishuangbanna and the Tibetan town of Shangri-La.", icon: "fa-earth-asia" },
+  { name: "Shangri-La", url: "https://shangri-la-yunnan.com", tag: "Plateau", desc: "A Tibetan town at 3,200m — monasteries, alpine lakes and snow-capped gorges.", icon: "fa-snowflake" },
+  { name: "Tibet & Lhasa", url: "https://tibet-lhasa-potala.com", tag: "Plateau", desc: "Potala Palace, turquoise sacred lakes and the Roof of the World.", icon: "fa-mountain-sun" },
+  { name: "Dunhuang & Jiuquan", url: "https://dunhuang-jiuquan.com", tag: "Deserts", desc: "Singing sand dunes, the Crescent Lake oasis and the Silk Road's Mogao Caves.", icon: "fa-sun" },
+  { name: "Dujiangyan Panda Base", url: "https://dujiangyan-panda-base.com", tag: "Wildlife", desc: "See giant pandas up close, with volunteer programs and forested enclosures.", icon: "fa-paw" },
+];
+
+// ── What to wear (by climate zone) ──
+const whatToWear = [
+  { zone: "High plateau — Tibet, Shangri-La, Jiuzhaigou", temp: "Cold mornings, fierce sun, possible snow even in summer", items: "Thermal base layer, fleece or down jacket, windproof shell, wide-brim hat, UV sunglasses, SPF 50 sunscreen, lip balm, altitude medication" },
+  { zone: "Desert & Gobi — Dunhuang, Badain Jaran", temp: "Hot days, near-freezing nights, sand gets everywhere", items: "Loose long sleeves, a light scarf or neck gaiter, closed shoes (not sandals), sunglasses, sunscreen, lip balm" },
+  { zone: "Subtropical south — Guilin, Zhangjiajie, Xishuangbanna", temp: "Hot and humid, sudden downpours", items: "Quick-dry shirts, a light rain jacket or poncho, breathable trousers, mosquito repellent, anti-chafe socks" },
+  { zone: "Northern grassland — Hulunbuir", temp: "Warm days, cold nights even in July", items: "Layers, a warm fleece for evenings, long trousers against insects and horse saddles, sturdy shoes" },
+];
+
+const packingChecklist = [
+  "Broken-in walking shoes — you will climb thousands of steps",
+  "Layers — mountain mornings are cold even in summer",
+  "Light rain jacket or poncho",
+  "Sunscreen, hat and sunglasses",
+  "Power bank — you navigate and pay by phone",
+  "Passport plus printed visa and hotel copies",
+  "Regular medication and altitude meds if going above 3,000m",
+  "Cash backup — small notes for rural areas",
+  "Travel eSIM or roaming plan, set up before you fly",
+  "Reusable water bottle",
+];
+
+// ── What to eat (by region) ──
+const foodGuide = [
+  { region: "Guilin & Yangshuo (Guangxi)", dishes: "Guilin rice noodles, beer fish, stuffed snails, bamboo-tube rice", note: "Eat rice noodles for breakfast like locals — a bowl is CNY 5–10. Beer fish is the Li River classic, best around Yangshuo's West Street." },
+  { region: "Zhangjiajie (Hunan)", dishes: "Sanxiaguo hotpot, Tujia smoked bacon, blood tofu", note: "Hunan food is spicy — say 'bù là' (not spicy) if needed. Sanxiaguo, a sizzling hotpot of cured meats, is the must-try." },
+  { region: "Chengdu & Jiuzhaigou (Sichuan)", dishes: "Hotpot, mapo tofu, dan dan noodles; Tibetan yak dishes in Jiuzhaigou", note: "In Jiuzhaigou, meals are mostly at your hotel or Tibetan family restaurants — simpler and pricier than Chengdu's famous cheap eats." },
+  { region: "Dunhuang (Gansu)", dishes: "Donkey-meat yellow noodles, lamb soup, Lanzhou beef noodles", note: "Silk Road flavours — lamb and noodles dominate. The Shazhou night market is where to eat after the dunes." },
+  { region: "Yunnan — Xishuangbanna, Shangri-La, Kunming", dishes: "Crossing-the-bridge noodles, Dai-style grilled fish, pineapple rice, yak butter tea", note: "China's most diverse food province — Dai food in the tropical south, Tibetan food in the northern mountains." },
+  { region: "Tibet — Lhasa", dishes: "Tsampa (roasted barley), yak momo dumplings, sweet tea, yak butter tea", note: "Tibetan food is hearty and high-calorie — ideal at altitude. Sweet tea houses are the local social hub." },
+  { region: "Inner Mongolia — Hulunbuir", dishes: "Hand-grabbed mutton, milk tea, dairy snacks, roasted whole lamb", note: "Eat like a herder — mutton, dairy and tea. Yurt camps usually cook for guests, so meals are often included." },
+];
+
+const diningTips = [
+  { title: "Dietary restrictions", tip: "Vegetarian: say 'wǒ chī sù' (I eat vegetarian). Halal food is widely available in the northwest (Gansu, Xinjiang). Print a card with your allergies in Chinese characters." },
+  { title: "Ordering without Chinese", tip: "Point at photos on the menu, use a translation app's camera, or ask for the English menu at tourist restaurants. Most picture menus are self-explanatory." },
+  { title: "Street-food safety", tip: "Stick to busy stalls with high turnover. Bottled water is cheap everywhere; do not drink tap water." },
+  { title: "Tipping", tip: "Tipping is not expected anywhere in China — not in restaurants, taxis or hotels. Round up a taxi fare at most." },
+];
+
+// ── Where to stay ──
+const whereToStay = [
+  { place: "Guilin & Yangshuo", best: "Yangshuo town or a riverside village on the Yulong River", why: "Guilin city is the transport hub, but Yangshuo is where the scenery is — wake up to karst peaks. Riverside guesthouses just outside town are quieter than West Street.", price: "Guesthouses CNY 150–400; riverside boutique CNY 400–800" },
+  { place: "Zhangjiajie", best: "Wulingyuan town, by the park's east gate", why: "Staying in Zhangjiajie city adds a 40-minute shuttle each way. Wulingyuan puts you at the gate for an early start and shorter elevator queues.", price: "Hotels CNY 200–600" },
+  { place: "Jiuzhaigou", best: "Zhangzha town, at the park entrance", why: "There is no lodging inside the park itself. Zhangzha village is a short walk from the gate — book early in autumn, it sells out.", price: "Hotels CNY 250–800 (pricier in October)" },
+  { place: "Huangshan", best: "One night on the summit (Beihai or Paiyunlou hotel)", why: "The famous sunrise is only practical if you sleep on top. Summit hotels are small and sell out weeks ahead.", price: "Summit CNY 900–1,500; base town CNY 150–300" },
+  { place: "Dunhuang", best: "Shazhou town centre", why: "Compact and walkable, next to the night market and a short taxi from the dunes and the Mogao booking office.", price: "Hotels CNY 150–400" },
+  { place: "Shangri-La & Tibet", best: "Shangri-La old town or Lhasa's Barkhor area", why: "Stay central for acclimatization — you will want to walk less on day one. Ask for a room with oxygen supply at high-altitude hotels.", price: "CNY 200–600; Lhasa mid-range CNY 300–700" },
+];
+
+const bookingTips = [
+  { title: "Which platform", tip: "Trip.com and Ctrip have the best English interface and accept foreign cards. Booking.com and Agoda also work. For guesthouses and homestays, Trip.com has the widest rural coverage." },
+  { title: "Passport registration", tip: "Every hotel legally registers your passport at check-in — this is normal and required. Have your physical passport (not a copy) ready." },
+  { title: "Peak-season booking", tip: "Book 1–2 months ahead for October (Golden Week), Chinese New Year and July–August. Jiuzhaigou and Huangshan summit hotels sell out earliest." },
+  { title: "Altitude choice", tip: "Above 3,000m, pick a hotel with an elevator and oxygen, and sleep low on night one — stay in Chengdu or Kunming before going straight to Lhasa." },
+];
+
+// ── Getting around ──
+const transportModes = [
+  { mode: "High-speed rail", best: "Most journeys between cities", detail: "Fastest, cheapest, most reliable. Guilin, Zhangjiajie, Huangshan and Chengdu all have stations. Book on Trip.com or 12306 up to 15 days ahead; seats release at about 8am Beijing time.", tip: "Book 15 days out in peak season — popular routes sell out." },
+  { mode: "Domestic flights", best: "Remote parks — Jiuzhaigou, Shangri-La, Kanas", detail: "Often cheaper than expected and the only sane way to reach far-flung destinations. Fly from the Chengdu, Kunming or Xi'an hubs.", tip: "Allow buffer time — mountain airports can be fogged in." },
+  { mode: "Private car with driver", best: "Dunhuang, grasslands, multi-stop loops", detail: "Hiring a car with driver (CNY 500–900/day) is the easiest way to cover spread-out scenery. Book through your hotel or a licensed agency; self-driving requires a Chinese licence.", tip: "Agree the full route and price in writing before setting off." },
+  { mode: "Buses & park shuttles", best: "Inside parks and last-mile links", detail: "Every big park has mandatory shuttle buses (Jiuzhaigou, Zhangjiajie). Long-distance coaches connect small towns cheaply but slowly.", tip: "Park shuttles are usually included in, or added to, your ticket." },
+];
+
+const gettingAroundTips = [
+  { title: "Buying train tickets", tip: "Trip.com (English) or the official 12306 app (Chinese). Tickets go on sale 15 days ahead at 8am Beijing time. Scan your passport directly at station e-gates." },
+  { title: "Ride-hailing & taxis", tip: "Didi is China's Uber — set it up with a foreign card before you fly. Taxis are cheap but drivers rarely speak English; show the address in Chinese characters." },
+  { title: "Navigation apps", tip: "Google Maps is unreliable inside China. Use Apple Maps (works well), Amap/Gaode or Baidu Maps, and download offline maps before you go." },
+  { title: "Inside the parks", tip: "Buy shuttle + cable-car combos — distances are huge. Arrive at opening time (6–7am) to beat queues, and note the last shuttle time so you don't get stranded." },
+];
+
+// ── Mistakes to avoid ──
+const mistakes = [
+  { mistake: "Underestimating distances", fix: "China is the size of a continent. Zhangjiajie and Guilin are 600km apart — don't try to 'pop over'. Plan half a day of travel between any two stops." },
+  { mistake: "Going during Golden Week (Oct 1–7)", fix: "The entire country travels at once. Parks hit capacity, prices triple and viewpoints are shoulder-to-shoulder. Shift your trip by one week and it all disappears." },
+  { mistake: "Not booking tickets in advance", fix: "Jiuzhaigou caps daily visitors and sells out; Huangshan summit hotels and Mogao Caves slots go weeks ahead. Book the moment your dates are fixed." },
+  { mistake: "Rushing altitude", fix: "Flying straight from sea level to Lhasa is how people ruin their trip. Acclimatize 1–2 nights in Chengdu, Kunming or Xining first, and take it slow on day one above 3,000m." },
+  { mistake: "Packing only for heat", fix: "Even in summer, mountain mornings and desert nights are cold. Layers beat a single heavy coat, and a rain jacket is non-negotiable in the south." },
+  { mistake: "Skipping the eSIM / VPN setup", fix: "Google, WhatsApp and Instagram are blocked inside China. Set up a travel eSIM or roaming plan and any VPN before you fly — not at the airport." },
+  { mistake: "Trusting the first 'official' ticket seller", fix: "Touts outside stations and parks sell overpriced or fake tickets. Buy from the official app, your hotel, or the park's own ticket office." },
+  { mistake: "Eating at the attraction entrance", fix: "Food right at the gate is the worst value. Walk 10 minutes into town or ask your hotel where locals eat — same dish, half the price." },
+  { mistake: "Arriving late to the park", fix: "Cable-car and shuttle queues peak from 10am. Arrive at opening (6–7am) and you'll have the viewpoint nearly to yourself for an hour." },
+  { mistake: "Forgetting your passport", fix: "Parks, trains and hotels all require your physical passport. A photo or copy is usually not enough — carry the real thing every day." },
+];
+
+// ── Photography ──
+const photography = [
+  { spot: "Zhangye Danxia", tip: "Shoot at golden hour — the striped cliffs look flat under midday sun. The west gate has shorter lines; viewpoint No.4 is the classic frame." },
+  { spot: "Jiuzhaigou", tip: "Go in late October, enter at 7am, and head to Five-Flower Lake before the wind picks up — still water gives the mirror reflection." },
+  { spot: "Huangshan", tip: "Stay on the summit and shoot the cloud sea at dawn. A polarizer cuts glare off the granite and deepens the sky." },
+  { spot: "Guilin & Yangshuo", tip: "The classic shot is from Xianggong Hill at sunrise, looking down the Li River bend. On the river, shoot from the front of the raft." },
+  { spot: "Dunhuang", tip: "Climb the dunes for sunset over Crescent Lake; a telephoto compresses the dune ridges. Protect your camera from sand — it gets everywhere." },
+  { spot: "Tibet & Shangri-La", tip: "The 'golden mountain' sunrise on Meili Snow Mountain is a once-in-a-lifetime frame — go Oct–Mar for clear skies. Ask before photographing monks." },
+];
+
+// ── Step-by-step planning (HowTo) ──
+const planSteps = [
+  { step: "Pick your season", detail: "Spring (Mar–May) and autumn (Sep–Nov) suit most of China. Choose your window, then work backwards." },
+  { step: "Choose 1–2 regions", detail: "Don't try to see everything. Pick one landscape (e.g. karst) or one region (e.g. Sichuan), and anchor your trip there." },
+  { step: "Lock the big tickets first", detail: "Book national-park tickets, summit hotels and any flights before anything else — they sell out first." },
+  { step: "Book trains and hotels", detail: "Trains open 15 days ahead at 8am Beijing time. Book hotels next to the park gate for early starts." },
+  { step: "Sort your visa and phone", detail: "Check visa / visa-free status, set up Alipay & WeChat Pay, buy a travel eSIM and install a VPN before you fly." },
+  { step: "Pack for the landscape", detail: "Layers, walking shoes, rain jacket, sunscreen and a power bank cover 90% of scenarios." },
+];
+
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: "How to Plan a China Nature Trip",
+  description: "Six steps to plan a nature trip in China — from choosing your season to packing.",
+  step: planSteps.map((s, i) => ({
+    "@type": "HowToStep",
+    position: i + 1,
+    name: s.step,
+    text: s.detail,
+  })),
+};
+
+// ── E-E-A-T author entity ──
+const author = {
+  name: "Alex Chen",
+  role: "China travel writer & photographer",
+  bio: "I've spent the last decade hiking, driving and photographing China's wild places — from the karst rivers of Guangxi to the glaciers of Sichuan. Every destination on this page is one I've personally visited, and the costs, seasons and routes reflect what I'd actually tell a friend. No sponsored listings, no tour-company scripts.",
+};
+
+---
+
+<Layout>
+  <!-- 1. Hero -->
+  <section id="top" class="relative flex min-h-[100dvh] items-center overflow-hidden">
+    <img src="/images/hero-karst.webp" alt="China's dramatic karst mountains and rivers at golden hour" class="absolute inset-0 h-full w-full object-cover" loading="eager" fetchpriority="high" width="1600" height="900" />
+    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-black/10"></div>
+    <div class="relative z-10 mx-auto w-full max-w-7xl px-6 pt-24">
+      <div class="max-w-2xl">
+        <span class="mb-6 inline-block rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white">Independent Guide · No Tour Sales</span>
+        <h1 class="font-display text-5xl font-bold tracking-tight text-white drop-shadow-md md:text-6xl lg:text-7xl lg:leading-[1.02]">China Nature</h1>
+        <p class="mt-6 max-w-lg text-lg leading-relaxed text-white/90 drop-shadow">Ten landscapes, one right trip. Cut through the overwhelm and find exactly where you should go.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#trip-finder" class="rounded-full bg-gradient-to-r from-[#0f766e] to-[#2dd4bf] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-[#0f766e]/20 transition-all hover:scale-105">Find My Trip</a>
+          <a href="#landscapes" class="rounded-full border border-white/40 bg-white/10 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur transition-all hover:bg-white/20">Explore Landscapes</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Start Here -->
+  <section class="relative border-b border-[#d5d0c4] bg-white py-14">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="rounded-3xl border border-[#d5d0c4]/40 bg-gradient-to-br from-[#f0fdfa] to-white p-8 shadow-sm md:p-10">
+        <div class="grid gap-8 lg:grid-cols-2">
+          <div>
+            <span class="tag tag-primary mb-4">Start Here</span>
+            <h2 class="text-3xl font-bold tracking-tight text-[#1c1a16] md:text-4xl">First time in China for nature?</h2>
+            <p class="mt-4 text-lg leading-relaxed text-[#5c5a4c]">Start with <strong class="text-[#0f766e]">Guilin & Yangshuo</strong> — 3–4 days, no altitude, and the exact landscape you've seen in every photo.</p>
+            <a href="#trip-finder" class="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#0f766e] to-[#2dd4bf] px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:scale-105">Find My Trip</a>
+          </div>
+          <div class="space-y-3">
+            {decisionTree.map((d) => (
+              <div class="flex items-start gap-3 rounded-xl border border-[#d5d0c4]/40 bg-white p-4 shadow-sm">
+                <span class="mt-0.5 shrink-0 text-[#14b8a6]"><i class="fa-solid fa-arrow-right"></i></span>
+                <p class="text-sm leading-relaxed text-[#5c5a4c]"><strong class="text-[#1c1a16]">{d.if}</strong> → {d.then} <span class="text-[#78716c]">({d.why})</span></p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Numbers -->
+  <section class="relative border-b border-[#d5d0c4] bg-white/70 backdrop-blur-sm">
+    <div class="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-6 py-12 md:grid-cols-4">
+      <div class="scroll-reveal text-center"><p class="font-display text-4xl font-bold text-[#0f766e] md:text-5xl">14</p><p class="mt-1 text-sm text-[#5c5a4c]">World Natural Heritage sites</p></div>
+      <div class="scroll-reveal text-center"><p class="font-display text-4xl font-bold text-[#0f766e] md:text-5xl">5</p><p class="mt-1 text-sm text-[#5c5a4c]">National parks (first batch)</p></div>
+      <div class="scroll-reveal text-center"><p class="font-display text-4xl font-bold text-[#0f766e] md:text-5xl">49</p><p class="mt-1 text-sm text-[#5c5a4c]">National parks by 2035</p></div>
+      <div class="scroll-reveal text-center"><p class="font-display text-4xl font-bold text-[#0f766e] md:text-5xl">11,800+</p><p class="mt-1 text-sm text-[#5c5a4c]">Protected areas</p></div>
+    </div>
+    <div class="mx-auto max-w-7xl px-6 pb-8">
+      <p class="text-center text-xs text-[#5c5a4c]/70">Figures from <a href="https://whc.unesco.org/en/statesparties/cn" target="_blank" rel="noopener" class="underline hover:text-[#0f766e]">UNESCO World Heritage Centre</a> and China's National Forestry & Grassland Administration.</p>
+    </div>
+  </section>
+
+  <!-- 3. Trip Finder -->
+  <section id="trip-finder" class="relative py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-primary mb-4">The Tool</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">Find Your Landscape</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">Filter by landform, season, difficulty and altitude — get a shortlist of destinations that actually fit your trip.</p>
+      </div>
+      <TripFinder destinations={destinations} />
+    </div>
+  </section>
+
+  <!-- 3b. Traveler types -->
+  <section class="relative py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-warm mb-4">Who Are You?</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">Your Type, Your Trip</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">Different travelers need different landscapes. Pick your type and go.</p>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {travelerTypes.map((t) => (
+          <div class="card-playful scroll-reveal rounded-2xl border border-[#d5d0c4]/40 bg-white p-7 shadow-sm">
+            <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ccfbf1]/60 text-[#0f766e]"><i class={`fa-solid ${t.icon} text-xl`}></i></div>
+            <h3 class="text-lg font-bold text-[#1c1a16]">{t.label}</h3>
+            <p class="mt-1 text-sm font-semibold text-[#0f766e]">Pick: {t.pick}</p>
+            <p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">{t.why}</p>
+            <p class="mt-3 inline-flex rounded-full bg-[#ccfbf1]/60 px-3 py-1 text-xs font-semibold text-[#0f766e]">{t.days}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Landscapes matrix -->
+  <section id="landscapes" class="relative bg-gradient-to-b from-[#edeae3] to-[#f8f7f4] py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-warm mb-4">10 Landscapes</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">Every Landscape China Has</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">China spans four climate zones and every major landform on Earth. Here's how to make sense of it.</p>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {landscapes.map((l) => (
+          <details class={`qa group scroll-reveal overflow-hidden rounded-2xl text-white shadow-sm ${l.gradient}`}>
+            <summary class="cursor-pointer p-6">
+              <div class="flex items-start justify-between">
+                <i class={`fa-solid ${l.icon} text-2xl opacity-90`}></i>
+                <svg class="qa-chevron h-5 w-5 shrink-0 opacity-80" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              </div>
+              <h3 class="mt-4 text-xl font-bold leading-tight">{l.name}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-white/85">{l.tagline}</p>
+              <p class="mt-4 border-t border-white/25 pt-3 text-xs font-medium text-white/75">{l.places}</p>
+            </summary>
+            <div class="px-6 pb-6">
+              <p class="text-sm leading-relaxed text-white/95">{l.intro}</p>
+              <div class="mt-4 space-y-3">
+                {l.spots.map((s) => (
+                  <div class="rounded-xl bg-black/20 p-4">
+                    <div class="flex items-start justify-between gap-2">
+                      <p class="font-semibold text-white">{s.name}</p>
+                      <span class="shrink-0 text-xs text-white/70">{s.season}</span>
+                    </div>
+                    <p class="mt-1 text-sm leading-relaxed text-white/85">{s.desc}</p>
+                    <p class="mt-2 text-xs font-medium text-white/70"><i class="fa-solid fa-person-hiking mr-1"></i>{s.activity}</p>
+                    {s.url && (
+                      <a href={s.url} target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-white/90 transition-colors hover:text-white">
+                        Full guide <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p class="mt-4 rounded-xl bg-black/20 p-4 text-sm leading-relaxed text-white/90"><strong class="font-semibold">Best way:</strong> {l.bestWay}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Compare -->
+  <section id="compare" class="relative py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-stone mb-4">The Big Three</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">Zhangjiajie vs Guilin vs Jiuzhaigou</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">The question everyone asks. Here's the honest answer.</p>
+      </div>
+      <div class="overflow-x-auto rounded-2xl border border-[#d5d0c4]/40 bg-white shadow-sm">
+        <table class="w-full min-w-[640px] border-collapse text-sm">
+          <thead>
+            <tr class="bg-[#0f766e] text-left text-white">
+              <th class="px-5 py-4 font-semibold"></th>
+              {comparison.columns.map((c) => <th class="px-5 py-4 font-semibold">{c}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {comparison.rows.map((row) => (
+              <tr class="border-t border-[#d5d0c4]/40">
+                <td class="px-5 py-4 font-semibold text-[#0f766e]">{row.label}</td>
+                {row.values.map((v) => <td class="px-5 py-4 text-[#5c5a4c]">{v}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <details class="qa mt-6 rounded-2xl border border-[#d5d0c4]/40 bg-white shadow-sm">
+        <summary class="flex cursor-pointer items-center justify-between p-5">
+          <span class="text-lg font-bold text-[#0f766e]">More comparisons</span>
+          <svg class="qa-chevron h-5 w-5 text-[#14b8a6]" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </summary>
+        <div class="space-y-4 px-5 pb-5">
+          <div class="rounded-xl bg-[#f8f7f4] p-4">
+            <p class="font-semibold text-[#1c1a16]">Guilin vs Yunnan</p>
+            <p class="mt-1 text-sm leading-relaxed text-[#5c5a4c]">Guilin is one compact region — perfect for a 3–4 day trip. Yunnan is a whole province — expect a week or more and bigger distances. Pick Guilin for ease; Yunnan for variety (Stone Forest, rice terraces, Shangri-La).</p>
+          </div>
+          <div class="rounded-xl bg-[#f8f7f4] p-4">
+            <p class="font-semibold text-[#1c1a16]">Jiuzhaigou vs Huanglong</p>
+            <p class="mt-1 text-sm leading-relaxed text-[#5c5a4c]">Both are Sichuan valleys, often combined in one trip. Jiuzhaigou is bigger, bluer and more famous; Huanglong is a smaller travertine terrace with a gentler walk. Do both in 3 days from Chengdu.</p>
+          </div>
+          <div class="rounded-xl bg-[#f8f7f4] p-4">
+            <p class="font-semibold text-[#1c1a16]">Huangshan vs Zhangjiajie</p>
+            <p class="mt-1 text-sm leading-relaxed text-[#5c5a4c]">Huangshan is classic granite scenery — pines, cloud seas and a famous sunrise. Zhangjiajie is alien sandstone pillars and adventure attractions. Pick Huangshan for atmosphere, Zhangjiajie for drama.</p>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- 6. Seasons -->
+  <section class="relative bg-[#0f766e] py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="mb-4 inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">Timing</span>
+        <h2 class="text-4xl font-bold tracking-tight text-white md:text-5xl">When to Go</h2>
+        <p class="mt-4 text-lg text-white/80">Spring and autumn are the sweet spots — but every season has a landscape.</p>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {seasons.map((s) => (
+          <div class="scroll-reveal rounded-2xl border border-white/15 bg-white/10 p-7 backdrop-blur-sm">
+            <i class={`fa-solid ${s.icon} text-3xl text-[#5eead4]`}></i>
+            <h3 class="mt-4 text-lg font-bold text-white">{s.name}</h3>
+            <p class="text-sm text-white/60">{s.months}</p>
+            <p class="mt-3 text-sm leading-relaxed text-white/80">{s.desc}</p>
+            <p class="mt-4 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold text-white">{s.best}</p>
+          </div>
+        ))}
+      </div>
+      <details class="qa mt-8 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm">
+        <summary class="flex cursor-pointer items-center justify-between p-5">
+          <span class="text-lg font-bold text-white">Month-by-month guide</span>
+          <svg class="qa-chevron h-5 w-5 text-[#5eead4]" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </summary>
+        <div class="grid gap-2 px-5 pb-5 sm:grid-cols-2 lg:grid-cols-3">
+          {monthlyGuide.map((mo) => (
+            <div class="rounded-xl bg-white/10 p-3">
+              <p class="font-bold text-[#5eead4]">{mo.m}</p>
+              <p class="mt-1 text-sm text-white/80">{mo.tip}</p>
+            </div>
+          ))}
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- 6b. What to wear -->
+  <section id="packing" class="relative py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-primary mb-4">What to Wear</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">Pack for the Landscape, Not the City</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">China's nature spans four climate zones. What keeps you comfortable in Dunhuang is useless in Jiuzhaigou — here's the quick map.</p>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-2">
+        {whatToWear.map((w) => (
+          <div class="scroll-reveal rounded-2xl border border-[#d5d0c4]/40 bg-white p-7 shadow-sm">
+            <h3 class="text-lg font-bold text-[#1c1a16]">{w.zone}</h3>
+            <p class="mt-1 text-sm font-semibold text-[#14b8a6]">{w.temp}</p>
+            <p class="mt-3 text-sm leading-relaxed text-[#5c5a4c]">{w.items}</p>
+          </div>
+        ))}
+      </div>
+      <details class="qa mt-6 rounded-2xl border border-[#d5d0c4]/40 bg-white shadow-sm">
+        <summary class="flex cursor-pointer items-center justify-between p-5">
+          <span class="text-lg font-bold text-[#0f766e]">The 10-item packing checklist</span>
+          <svg class="qa-chevron h-5 w-5 text-[#14b8a6]" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </summary>
+        <div class="grid gap-2 px-5 pb-5 sm:grid-cols-2">
+          {packingChecklist.map((item) => (
+            <div class="flex items-start gap-2 rounded-xl bg-[#f8f7f4] p-3 text-sm text-[#5c5a4c]">
+              <i class="fa-solid fa-check mt-0.5 text-[#14b8a6]"></i>
+              <span>{item}</span>
+            </div>
+          ))}
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- 7. Wildlife -->
+  <section id="wildlife" class="relative py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-primary mb-4">Wildlife</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">The Animals You Came For</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">Pandas are the headline — but China hides snow leopards, monkeys and cranes too.</p>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {wildlife.map((w) => (
+          <div class="card-playful scroll-reveal flex items-start gap-4 rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm">
+            <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#0f766e] to-[#5eead4] text-lg font-bold text-white">{w.initial}</span>
+            <div>
+              <h3 class="text-lg font-bold text-[#1c1a16]">{w.name}</h3>
+              <p class="mt-1 text-sm text-[#5c5a4c]">{w.where}</p>
+              <p class="mt-2 inline-flex rounded-full bg-[#ccfbf1]/60 px-3 py-1 text-xs font-semibold text-[#0f766e]">{w.fact}</p>
+              <p class="mt-3 text-sm leading-relaxed text-[#5c5a4c]">{w.detail}</p>
+              {w.url && (
+                <a href={w.url} target="_blank" rel="noopener" class="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[#0f766e] transition-colors hover:text-[#115e59]">
+                  See pandas up close <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                </a>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 7b. What to eat -->
+  <section id="food" class="relative bg-gradient-to-b from-[#edeae3] to-[#f8f7f4] py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-warm mb-4">What to Eat</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">The Food at the Foot of the Mountain</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">Each landscape region has its own kitchen. Here's what to order where — and how to eat well without speaking Chinese.</p>
+      </div>
+      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {foodGuide.map((f) => (
+          <div class="card-playful scroll-reveal rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-[#1c1a16]">{f.region}</h3>
+            <p class="mt-2 text-sm font-semibold text-[#0f766e]">{f.dishes}</p>
+            <p class="mt-3 text-sm leading-relaxed text-[#5c5a4c]">{f.note}</p>
+          </div>
+        ))}
+      </div>
+      <div class="mt-6 grid gap-4 sm:grid-cols-2">
+        {diningTips.map((d) => (
+          <div class="scroll-reveal rounded-2xl border border-[#d5d0c4]/40 bg-white p-5 shadow-sm">
+            <p class="font-bold text-[#0f766e]">{d.title}</p>
+            <p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">{d.tip}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Itineraries -->
+  <section id="itineraries" class="relative bg-gradient-to-b from-[#edeae3] to-[#f8f7f4] py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-warm mb-4">Routes</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">Three Ways to Do It</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">Copy-paste itineraries — ready-made routes that combine regions sensibly.</p>
+      </div>
+      <div class="grid gap-6 md:grid-cols-3">
+        {itineraries.map((it, i) => (
+          <div class="card-playful scroll-reveal rounded-2xl border border-[#d5d0c4]/40 bg-white p-8 shadow-sm">
+            <div class={`step-circle step-circle-${i + 1} mb-5`}>{i + 1}</div>
+            <p class="text-xs font-bold uppercase tracking-wider text-[#14b8a6]">{it.days}</p>
+            <h3 class="mt-1 text-2xl font-bold text-[#1c1a16]">{it.title}</h3>
+            <p class="mt-2 text-sm font-medium text-[#0f766e]">{it.route}</p>
+            <p class="mt-3 text-sm leading-relaxed text-[#5c5a4c]">{it.note}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 8b. Budget quick reference -->
+  <section class="relative py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-stone mb-4">Costs</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">What It Costs</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">Realistic per-person daily budgets in USD, excluding international flights.</p>
+      </div>
+      <div class="overflow-x-auto rounded-2xl border border-[#d5d0c4]/40 bg-white shadow-sm">
+        <table class="w-full min-w-[560px] border-collapse text-sm">
+          <thead>
+            <tr class="bg-[#0f766e] text-left text-white">
+              <th class="px-5 py-4 font-semibold">Style</th>
+              <th class="px-5 py-4 font-semibold">Accommodation</th>
+              <th class="px-5 py-4 font-semibold">Daily cost</th>
+              <th class="px-5 py-4 font-semibold">7-day trip</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-t border-[#d5d0c4]/40">
+              <td class="px-5 py-4 font-semibold text-[#0f766e]">Budget</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">Hostels, local food</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">$30–50</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">$250–400</td>
+            </tr>
+            <tr class="border-t border-[#d5d0c4]/40">
+              <td class="px-5 py-4 font-semibold text-[#0f766e]">Mid-range</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">3-star hotels, restaurants</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">$60–120</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">$500–900</td>
+            </tr>
+            <tr class="border-t border-[#d5d0c4]/40">
+              <td class="px-5 py-4 font-semibold text-[#0f766e]">Comfort</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">4–5 star, private car</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">$150–250+</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">$1,200–2,000+</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8c. Where to stay -->
+  <section id="stay" class="relative py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-stone mb-4">Where to Stay</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">Sleep at the Gate, Not in the City</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">For most parks, the single biggest upgrade is staying next to the entrance — it buys you an empty park at sunrise. Here's where to book for each.</p>
+      </div>
+      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {whereToStay.map((s) => (
+          <div class="card-playful scroll-reveal rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-[#1c1a16]">{s.place}</h3>
+            <p class="mt-2 text-sm font-semibold text-[#0f766e]"><i class="fa-solid fa-location-dot mr-1.5"></i>{s.best}</p>
+            <p class="mt-3 text-sm leading-relaxed text-[#5c5a4c]">{s.why}</p>
+            <p class="mt-3 rounded-lg bg-[#f8f7f4] px-3 py-2 text-xs font-medium text-[#78716c]">{s.price}</p>
+          </div>
+        ))}
+      </div>
+      <div class="mt-6 grid gap-4 sm:grid-cols-2">
+        {bookingTips.map((b) => (
+          <div class="scroll-reveal rounded-2xl border border-[#d5d0c4]/40 bg-white p-5 shadow-sm">
+            <p class="font-bold text-[#0f766e]">{b.title}</p>
+            <p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">{b.tip}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 8d. Getting around -->
+  <section id="transport" class="relative bg-gradient-to-b from-[#edeae3] to-[#f8f7f4] py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-primary mb-4">Getting Around</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">How to Actually Move Around China</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">The distances are big, but the network is excellent. Match the mode to the journey and it becomes easy.</p>
+      </div>
+      <div class="grid gap-5 md:grid-cols-2">
+        {transportModes.map((t) => (
+          <div class="card-playful scroll-reveal rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-[#1c1a16]">{t.mode}</h3>
+            <p class="mt-1 text-sm font-semibold text-[#14b8a6]">Best for: {t.best}</p>
+            <p class="mt-3 text-sm leading-relaxed text-[#5c5a4c]">{t.detail}</p>
+            <p class="mt-3 text-sm font-medium text-[#0f766e]"><i class="fa-regular fa-lightbulb mr-1.5"></i>{t.tip}</p>
+          </div>
+        ))}
+      </div>
+      <div class="mt-6 grid gap-4 sm:grid-cols-2">
+        {gettingAroundTips.map((g) => (
+          <div class="scroll-reveal rounded-2xl border border-[#d5d0c4]/40 bg-white p-5 shadow-sm">
+            <p class="font-bold text-[#0f766e]">{g.title}</p>
+            <p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">{g.tip}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. Practical -->
+  <section class="relative py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-stone mb-4">Before You Fly</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">The Practical Stuff</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">Four things that stress people out — solved.</p>
+      </div>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {practical.map((p) => (
+          <div class="scroll-reveal rounded-2xl border border-[#d5d0c4]/40 bg-white p-7 shadow-sm">
+            <i class={`fa-solid ${p.icon} text-2xl`} style={`color: ${p.color}`}></i>
+            <h3 class="mt-3 text-lg font-bold text-[#1c1a16]">{p.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 9b. Step-by-step plan -->
+  <section id="plan" class="relative bg-gradient-to-b from-[#edeae3] to-[#f8f7f4] py-20 md:py-28">
+    <div class="mx-auto max-w-5xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-primary mb-4">Plan It</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">Plan Your Trip in 6 Steps</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">The order matters — book the scarce things first and everything else falls into place.</p>
+      </div>
+      <ol class="space-y-4">
+        {planSteps.map((p, i) => (
+          <li class="scroll-reveal flex gap-4 rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm">
+            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#0f766e] to-[#5eead4] font-bold text-white">{i + 1}</span>
+            <div>
+              <h3 class="text-lg font-bold text-[#1c1a16]">{p.step}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">{p.detail}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 9c. Mistakes to avoid -->
+  <section id="mistakes" class="relative py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-warm mb-4">Don't Do This</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">10 Mistakes That Cost Travelers a Day</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">Learn from the people who got it wrong, so you don't.</p>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        {mistakes.map((m) => (
+          <div class="scroll-reveal rounded-2xl border border-[#d5d0c4]/40 bg-white p-5 shadow-sm">
+            <p class="font-bold text-[#1c1a16]"><i class="fa-solid fa-triangle-exclamation mr-2 text-[#d4a373]"></i>{m.mistake}</p>
+            <p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">{m.fix}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 9d. Photography -->
+  <section id="photography" class="relative bg-gradient-to-b from-[#edeae3] to-[#f8f7f4] py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-stone mb-4">Photography</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">Get the Shot You Came For</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">Six frames worth crossing the world for — and how to nail each one.</p>
+      </div>
+      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {photography.map((p) => (
+          <div class="card-playful scroll-reveal rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-[#1c1a16]">{p.spot}</h3>
+            <p class="mt-3 text-sm leading-relaxed text-[#5c5a4c]">{p.tip}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. FAQ -->
+  <section id="faq" class="relative py-20 md:py-28">
+    <div class="mx-auto max-w-4xl px-6">
+      <div class="mb-12">
+        <span class="tag tag-primary mb-4">Quick Answers</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">Frequently Asked Questions</h2>
+      </div>
+      <Faq items={faqItems} />
+      <script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
+    </div>
+  </section>
+
+  <!-- 11. Heritage sites -->
+  <section class="relative border-t border-[#d5d0c4] bg-white py-20">
+    <div class="mx-auto max-w-4xl px-6">
+      <div class="mb-8 text-center">
+        <span class="tag tag-warm mb-4">The Official List</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">14 World Natural Heritage Sites</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">China has more natural World Heritage sites than any other country. Here's the full list.</p>
+      </div>
+      <div class="grid gap-3 sm:grid-cols-2">
+        {heritageSites.map((site, i) => (
+          <a href={site.url} target="_blank" rel="noopener" class="group flex items-center gap-3 rounded-xl border border-[#d5d0c4]/40 bg-[#f8f7f4] px-4 py-3 transition-colors hover:border-[#14b8a6]/50 hover:bg-white">
+            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#0f766e] to-[#5eead4] text-xs font-bold text-white">{i + 1}</span>
+            <span class="text-sm font-medium text-[#1c1a16] group-hover:text-[#0f766e]">{site.name}</span>
+            <i class="fa-solid fa-arrow-up-right-from-square ml-auto text-[10px] text-[#a8a29e]"></i>
+          </a>
+        ))}
+      </div>
+      <p class="mt-8 text-center text-xs text-[#5c5a4c]/70">Source: <a href="https://whc.unesco.org/en/statesparties/cn" target="_blank" rel="noopener" class="underline hover:text-[#0f766e]">UNESCO World Heritage Centre — China</a>.</p>
+    </div>
+  </section>
+
+  <!-- 11b. Sister-site network -->
+  <section id="guides" class="relative border-t border-[#d5d0c4] bg-gradient-to-b from-[#edeae3] to-[#f8f7f4] py-20">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-primary mb-4">Go Deeper</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">Explore Our Destination Guides</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">In-depth, independent guides to the places above — written the same honest way, with no tour sales.</p>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {sisterSites.map((site) => (
+          <a href={site.url} target="_blank" rel="noopener" class="card-playful scroll-reveal group flex flex-col rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm">
+            <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ccfbf1]/60 text-[#0f766e]"><i class={`fa-solid ${site.icon} text-xl`}></i></div>
+            <span class="text-xs font-bold uppercase tracking-wider text-[#14b8a6]">{site.tag}</span>
+            <h3 class="mt-2 text-lg font-bold text-[#1c1a16] group-hover:text-[#0f766e]">{site.name}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">{site.desc}</p>
+            <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[#0f766e]">Read guide <i class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. Author -->
+  <section class="relative border-t border-[#d5d0c4] bg-[#edeae3] py-16">
+    <div class="mx-auto max-w-4xl px-6">
+      <div class="flex flex-col items-center gap-6 rounded-3xl border border-[#d5d0c4]/40 bg-white p-8 text-center shadow-sm md:flex-row md:text-left">
+        <span class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#0f766e] to-[#5eead4] text-2xl font-bold text-white">{author.name.charAt(0)}</span>
+        <div>
+          <p class="text-lg font-bold text-[#1c1a16]">{author.name}</p>
+          <p class="text-sm font-semibold text-[#0f766e]">{author.role}</p>
+          <p class="mt-3 max-w-2xl text-sm leading-relaxed text-[#5c5a4c]">{author.bio}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)}></script>
+  <script type="application/ld+json" set:html={JSON.stringify(destinationSchema)}></script>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)}></script>
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)}></script>
+</Layout>

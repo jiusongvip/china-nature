@@ -1,0 +1,16 @@
+{
+  "name": "china-nature",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "build": "npx astro build && node scripts/fix-sitemap-home.mjs",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@tailwindcss/vite": "^4.1.0",
+    "astro": "^5.5.0",
+    "tailwindcss": "^4.1.0"
+  }
+}
