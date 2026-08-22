@@ -1,7 +1,7 @@
 export const SITE = {
-  title: "China Nature — Ultimate Guide to Natural Wonders & Parks",
+  title: "Top 10 Natural Wonders in China (2026) — Best Nature Places",
   description:
-    "Discover China's nature — karst peaks, danxia cliffs, glaciers, deserts, lakes and wildlife. Use our trip finder to pick your perfect landscape.",
+    "China's 10 best natural wonders, ranked — Zhangjiajie, Jiuzhaigou, Zhangye Danxia, Guilin & more. Seasons, costs and a trip finder, with no tour sales.",
   url: "https://www.china-nature.com",
 };
 
