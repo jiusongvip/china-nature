@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.china-nature.com/sitemap-index.xml
+Sitemap: https://www.chinanaturetrip.com/sitemap-index.xml

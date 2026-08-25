@@ -2,7 +2,7 @@ export const SITE = {
   title: "Top 10 Natural Wonders in China (2026) — Best Nature Places",
   description:
     "China's 10 best natural wonders, ranked — Zhangjiajie, Jiuzhaigou, Zhangye Danxia, Guilin & more. Seasons, costs and a trip finder, with no tour sales.",
-  url: "https://www.china-nature.com",
+  url: "https://www.chinanaturetrip.com",
 };
 
 // Single-page anchor navigation

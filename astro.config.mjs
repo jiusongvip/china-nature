@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   integrations: [sitemap()],
-  site: "https://www.china-nature.com",
+  site: "https://www.chinanaturetrip.com",
   vite: { plugins: [tailwindcss()] },
   trailingSlash: 'always',
 });
