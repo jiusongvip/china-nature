@@ -158,6 +158,28 @@ const heritageSites = [
 ];
 
 
+
+const seasons = [
+  { name: "Spring", months: "Mar–May", icon: "fa-seedling", desc: "Mild temperatures and blooming flowers make spring the safest all-round choice. Karst turns lush green and mountain paths reopen after winter. Watch for May public holidays, which spike domestic travel.", best: "Karst, mountains, flowers" },
+  { name: "Summer", months: "Jun–Aug", icon: "fa-sun", desc: "Hot and humid in the south (30°C+), but the grasslands and high plateau hit their prime — cool, green and full of wildflowers. Rivers run high for rafting. Expect afternoon storms.", best: "Grasslands, plateau, rivers" },
+  { name: "Autumn", months: "Sep–Nov", icon: "fa-leaf", desc: "The golden season — crisp air and the year's best light. Lakes go mirror-still, forests turn red and gold, and danxia colors peak. Avoid the first week of October (Golden Week), when prices triple.", best: "Lakes, forests, danxia" },
+  { name: "Winter", months: "Dec–Feb", icon: "fa-snowflake", desc: "Snow, hot springs and empty viewpoints. Hotels are cheap and crowds vanish — but the north is bitterly cold and some high passes close. Best for snow scenery, glaciers and misty karst.", best: "Snow, hot springs, ice" },
+];
+
+const monthlyGuide = [
+  { m: "Jan", tip: "Ice festivals in Harbin; misty karst in Guilin" },
+  { m: "Feb", tip: "Snow on Huangshan; quiet, cheap and cold" },
+  { m: "Mar", tip: "Spring blooms; karst turns green" },
+  { m: "Apr", tip: "Peak season begins — mild and clear" },
+  { m: "May", tip: "Green mountains; avoid May public holidays" },
+  { m: "Jun", tip: "Grasslands hit their prime; south gets hot" },
+  { m: "Jul", tip: "Plateau and grasslands; monsoon in the south" },
+  { m: "Aug", tip: "Hulunbuir and Qinghai at their best" },
+  { m: "Sep", tip: "Autumn begins; lakes and forests turn gold" },
+  { m: "Oct", tip: "Peak color — but skip Oct 1–7 Golden Week" },
+  { m: "Nov", tip: "Danxia and lakes at peak; fewer crowds" },
+  { m: "Dec", tip: "Snow, glaciers and hot springs; cheapest flights" },
+];
 const title = "China Nature Travel Guide — Packing, Food, Stays, Transport & Planning";
 const description = "The practical companion to China's nature: what to pack per climate zone, where to stay by every park gate, regional food, high-speed rail and flights, a 6-step plan and the 10 mistakes to avoid.";
 ---
@@ -421,6 +443,88 @@ const description = "The practical companion to China's nature: what to pack per
     </div>
   </section>
 
+
+  <!-- 6. Seasons -->
+  <section id="seasons" class="relative bg-[#0f766e] py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="mb-4 inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">Timing</span>
+        <h2 class="text-4xl font-bold tracking-tight text-white md:text-5xl">When to Go</h2>
+        <p class="mt-4 text-lg text-white/80">Spring and autumn are the sweet spots — but every season has a landscape.</p>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {seasons.map((s) => (
+          <div class="scroll-reveal rounded-2xl border border-white/15 bg-white/10 p-7 backdrop-blur-sm">
+            <Icon name={s.icon} class="text-3xl text-[#5eead4]" />
+            <h3 class="mt-4 text-lg font-bold text-white">{s.name}</h3>
+            <p class="text-sm text-white/60">{s.months}</p>
+            <p class="mt-3 text-sm leading-relaxed text-white/80">{s.desc}</p>
+            <p class="mt-4 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold text-white">{s.best}</p>
+          </div>
+        ))}
+      </div>
+      <details class="qa mt-8 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm">
+        <summary class="flex cursor-pointer items-center justify-between p-5">
+          <span class="text-lg font-bold text-white">Month-by-month guide</span>
+          <svg class="qa-chevron h-5 w-5 text-[#5eead4]" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </summary>
+        <div class="grid gap-2 px-5 pb-5 sm:grid-cols-2 lg:grid-cols-3">
+          {monthlyGuide.map((mo) => (
+            <div class="rounded-xl bg-white/10 p-3">
+              <p class="font-bold text-[#5eead4]">{mo.m}</p>
+              <p class="mt-1 text-sm text-white/80">{mo.tip}</p>
+            </div>
+          ))}
+        </div>
+      </details>
+    </div>
+  </section>
+
+  
+<!-- 8b. Budget quick reference -->
+  <section id="costs" class="relative py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-stone mb-4">Costs</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">What It Costs</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">Realistic per-person daily budgets in USD, excluding international flights.</p>
+      </div>
+      <div class="overflow-x-auto rounded-2xl border border-[#d5d0c4]/40 bg-white shadow-sm">
+        <table class="w-full min-w-[560px] border-collapse text-sm">
+          <thead>
+            <tr class="bg-[#0f766e] text-left text-white">
+              <th class="px-5 py-4 font-semibold">Style</th>
+              <th class="px-5 py-4 font-semibold">Accommodation</th>
+              <th class="px-5 py-4 font-semibold">Daily cost</th>
+              <th class="px-5 py-4 font-semibold">7-day trip</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-t border-[#d5d0c4]/40">
+              <td class="px-5 py-4 font-semibold text-[#0f766e]">Budget</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">Hostels, local food</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">$30–50</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">$250–400</td>
+            </tr>
+            <tr class="border-t border-[#d5d0c4]/40">
+              <td class="px-5 py-4 font-semibold text-[#0f766e]">Mid-range</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">3-star hotels, restaurants</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">$60–120</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">$500–900</td>
+            </tr>
+            <tr class="border-t border-[#d5d0c4]/40">
+              <td class="px-5 py-4 font-semibold text-[#0f766e]">Comfort</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">4–5 star, private car</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">$150–250+</td>
+              <td class="px-5 py-4 text-[#5c5a4c]">$1,200–2,000+</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  
 
   <script type="application/ld+json" set:html={JSON.stringify(howToSchema)}></script>
 </Layout>
