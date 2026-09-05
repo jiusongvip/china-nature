@@ -5,13 +5,14 @@ export const SITE = {
   url: "https://www.chinanaturetrip.com",
 };
 
-// Single-page anchor navigation
+// Single-page anchor navigation. Use absolute "/#anchor" so links resolve to the
+// homepage section from any subpage (a bare "#anchor" would target the current page).
 export const NAV = [
-  { label: "Trip Finder", href: "#trip-finder" },
+  { label: "Trip Finder", href: "/#trip-finder" },
   { label: "Landscapes", href: "/landscapes/" },
-  { label: "Compare", href: "#compare" },
-  { label: "Wildlife", href: "#wildlife" },
-  { label: "Itineraries", href: "#itineraries" },
-  { label: "Guides", href: "#guides" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Compare", href: "/#compare" },
+  { label: "Wildlife", href: "/#wildlife" },
+  { label: "Itineraries", href: "/#itineraries" },
+  { label: "Guides", href: "/#guides" },
+  { label: "FAQ", href: "/#faq" },
 ];
