@@ -1,12 +1,12 @@
 // Copy & compress sister-site images into china-nature/public/images/
 // Source images are first-party (own site network) — safe to reuse.
-// Target rule: WebP, < 200KB per image. Steps: 1600px/q82 -> 1280px/q75 -> 1024px/q70 -> 900px/q65.
+// Target rule: WebP, < 100KB per image (hero < 90KB). Steps: 1400px/q72 -> 1280px/q70 -> 1152px/q66 -> 1024px/q64 -> 900px/q60.
 import { mkdirSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 
-const ROOT = "D:/workspace/website";
-const OUT = "D:/workspace/website/china-nature/public/images";
+const ROOT = "D:/workspaces/website";
+const OUT = "D:/workspaces/website/china-nature/public/images";
 
 // [source, dest-name]
 const IMAGES = [
@@ -57,16 +57,16 @@ for (const [srcRel, destName] of IMAGES) {
   const dest = path.join(OUT, destName);
   try {
     const srcSizeKB = Math.round(statSync(src).size / 1024);
-    // step down until under 200KB
+    // step down until under 100KB
     let buf = null;
     let kb = Infinity;
-    for (const [w, q] of [[1600, 82], [1280, 75], [1024, 70], [900, 65]]) {
+    for (const [w, q] of [[1400, 72], [1280, 70], [1152, 66], [1024, 64], [900, 60]]) {
       buf = await sharp(src)
         .resize({ width: w, withoutEnlargement: true })
         .webp({ quality: q })
         .toBuffer();
       kb = Math.round(buf.length / 1024);
-      if (kb <= 200) break;
+      if (kb <= 100) break;
     }
     writeFileSync(dest, buf);
     console.log(`OK  ${destName}  ${srcSizeKB}KB -> ${kb}KB`);
