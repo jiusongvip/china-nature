@@ -8,7 +8,7 @@ export const SITE = {
 // Single-page anchor navigation
 export const NAV = [
   { label: "Trip Finder", href: "#trip-finder" },
-  { label: "Landscapes", href: "#landscapes" },
+  { label: "Landscapes", href: "/landscapes/" },
   { label: "Compare", href: "#compare" },
   { label: "Wildlife", href: "#wildlife" },
   { label: "Itineraries", href: "#itineraries" },

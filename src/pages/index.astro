@@ -4,129 +4,6 @@ import TripFinder from "../components/TripFinder.astro";
 import Icon from "../components/Icon.astro";
 
 // ── 10 landform families (the differentiator) ──
-const landscapes = [
-  {
-    slug: "karst", name: "Karst", icon: "fa-mountain", gradient: "landscape-karst", img: "/images/karst-li-river.webp",
-    imgAlt: "Karst peaks of the Li River in Guilin, China",
-    tagline: "Tower-like limestone peaks, caves and lazy rivers", places: "Guilin · Yangshuo · Yunnan Stone Forest",
-    intro: "Karst is the landscape you already know — the cone-shaped limestone peaks rising out of jade-green rivers that appear on every Chinese painting and banknote. It forms when mildly acidic rainwater slowly dissolves soluble limestone over millions of years, leaving behind towers, caves and underground rivers.",
-    spots: [
-      { name: "Guilin & Yangshuo", desc: "The classic karst scene. Cruise the Li River from Guilin to Yangshuo, then rent a bike and ride through rice paddies, or float a bamboo raft down the Yulong River.", season: "Apr–Nov", activity: "Cruise, cycling, bamboo raft", url: "https://guilin-yang-shuo.com" },
-      { name: "Yunnan Stone Forest", desc: "A UNESCO-listed forest of jagged limestone pinnacles near Kunming — some 30m tall — threaded with stone paths, caves and Yi minority villages.", season: "Year-round", activity: "Walking trails", url: "https://yunnan-province.com" },
-      { name: "Wulong Karst", desc: "Giant natural bridges, sinkholes and caves near Chongqing — an otherworldly backdrop used in films, and one of the largest karst systems on Earth.", season: "Apr–Oct", activity: "Hiking, cave tours" },
-    ],
-    bestWay: "Boat or raft is the classic way in — but renting a bike in Yangshuo gets you closer and away from the tour buses.",
-  },
-  {
-    slug: "danxia", name: "Danxia", icon: "fa-fire", gradient: "landscape-danxia", img: "/images/danxia-zhangye.webp",
-    imgAlt: "Rainbow-striped danxia cliffs of Zhangye in Gansu, China",
-    tagline: "Rainbow-striped red cliffs that look painted", places: "Zhangye · Danxia Mountain · Langshan",
-    intro: "Danxia is China's most photogenic oddity — layered red sandstone carved by erosion into stripes of crimson, orange and cream that look airbrushed. The landform is named after the Danxia Mountains in Guangdong, but the most famous example is Zhangye's 'Rainbow Mountains'.",
-    spots: [
-      { name: "Zhangye Danxia", desc: "The Rainbow Mountains — vast ridges of striped red, yellow and green rock in Gansu. Colors are most saturated just after sunrise and before sunset.", season: "Year-round", activity: "Boardwalks, viewpoints" },
-      { name: "Danxia Mountain", desc: "The landform's namesake near Shaoguan, Guangdong — red cliffs, stone pillars and subtropical forest, with boat rides along the Jin River below.", season: "Oct–Dec", activity: "Hiking, river boat" },
-      { name: "Langshan", desc: "A quieter World Heritage danxia of red peaks and a dramatic river-cut gorge in Hunan, far from the Zhangye crowds.", season: "Apr–Oct", activity: "Hiking" },
-    ],
-    bestWay: "Visit at golden hour — low sun brings out the strata. Zhangye's boardwalks make it easy, but hiring a driver lets you beat the crowds.",
-  },
-  {
-    slug: "mountains", name: "Mountains", icon: "fa-mountain", gradient: "landscape-mountains", img: "/images/mountains-huangshan.webp",
-    imgAlt: "Granite peaks of Huangshan (Yellow Mountain) in Anhui, China",
-    tagline: "Granite spires, cloud seas and sacred summits", places: "Huangshan · Zhangjiajie · Fanjing",
-    intro: "China's scenic and sacred mountains are a category of their own — granite spires wreathed in cloud, stone staircases climbing to temples on the summit, and sunrises people wake in the dark to see. Some are pilgrimage sites; others are pure geology.",
-    spots: [
-      { name: "Huangshan", desc: "The 'loveliest mountain of China' — granite pines, grotesque rocks, hot springs and a famous sea of clouds. UNESCO-listed and the direct inspiration for classical ink painting.", season: "Year-round", activity: "Cable car + summit trails" },
-      { name: "Zhangjiajie", desc: "3,000 quartz-sandstone pillars rising out of subtropical forest — the 'floating mountains' of Avatar. Includes the world's tallest outdoor elevator and a glass-bottomed bridge.", season: "Apr–Nov", activity: "Elevator, glass bridge, trails", url: "https://zhangjiajie-national-park.com" },
-      { name: "Fanjingshan", desc: "A dramatic twin-peaked summit topped by Buddhist temples, reached by a near-vertical staircase above a sea of clouds in Guizhou.", season: "Apr–Nov", activity: "Staircase hike" },
-    ],
-    bestWay: "Plan at least one summit sunrise — it is the single best mountain experience in China. Cable cars save your legs, but queues are long in peak season.",
-  },
-  {
-    slug: "lakes", name: "Lakes", icon: "fa-water", gradient: "landscape-lakes", img: "/images/lakes-napa.webp",
-    imgAlt: "Napa Lake wetland meadow near Shangri-La in Yunnan, China",
-    tagline: "Turquoise alpine lakes and crystal-clear pools", places: "Jiuzhaigou · Qinghai Lake · Kanas",
-    intro: "China's alpine lakes are unlike anything at sea level — turquoise, emerald and sapphire pools formed by glacial runoff and mineral deposits, often framed by snow peaks. They are the country's most photographed water.",
-    spots: [
-      { name: "Jiuzhaigou", desc: "A UNESCO valley of over 100 tiered lakes and waterfalls in every shade of blue and green, backed by snow mountains and Tibetan villages.", season: "Sep–Oct", activity: "Boardwalk + shuttle bus" },
-      { name: "Qinghai Lake", desc: "China's largest lake — a vast saltwater mirror ringed by yellow rapeseed fields in summer, and a key stop on the Qinghai–Tibet route.", season: "Jun–Aug", activity: "Cycling, driving loop" },
-      { name: "Kanas", desc: "An emerald mountain lake in the far-northwest Altai, famous for autumn birch and larch forests and the mythical 'Kanas monster'.", season: "Sep–Oct", activity: "Boat, boardwalks, viewpoints" },
-    ],
-    bestWay: "Go in autumn for maximum color, and arrive at opening time — alpine lakes are calmest and most reflective before the wind picks up.",
-  },
-  {
-    slug: "deserts", name: "Deserts", icon: "fa-sun", gradient: "landscape-deserts", img: "/images/deserts-crescent-lake.webp",
-    imgAlt: "Crescent Lake oasis in the Mingsha dunes of Dunhuang, China",
-    tagline: "Singing dunes, oases and Silk Road silence", places: "Dunhuang · Badain Jaran · Taklimakan",
-    intro: "China's deserts are the sands of the ancient Silk Road — rolling dune fields, 'singing' sands, oasis lakes and the ruins of caravan towns. They stretch across the northwest from Gansu to Xinjiang.",
-    spots: [
-      { name: "Dunhuang & Mingsha Shan", desc: "The 'Singing Sand Dunes' rising behind a crescent-shaped oasis lake, gateway to the Mogao Caves' thousand-year-old Buddhist art.", season: "Apr–Jun, Sep–Oct", activity: "Camel ride, sandboarding, sunset", url: "https://dunhuang-jiuquan.com" },
-      { name: "Badain Jaran", desc: "The world's tallest stationary dunes — some 500m — hiding over 100 spring-fed lakes in Inner Mongolia, sacred to local herders.", season: "May–Oct", activity: "4WD desert tour" },
-      { name: "Taklimakan", desc: "One of Earth's largest sandy deserts, crossed by a remote desert highway — a vast, empty sea of dunes in Xinjiang.", season: "Apr–Oct", activity: "Desert highway drive" },
-    ],
-    bestWay: "Go at dawn or dusk when the sand glows and temperatures drop — and always take a licensed driver into the dunes.",
-  },
-  {
-    slug: "grasslands", name: "Grasslands", icon: "fa-leaf", gradient: "landscape-grassland", img: "/images/grasslands-shangri-la.webp",
-    imgAlt: "Highland grassland of Shangri-La in Yunnan, China",
-    tagline: "Endless steppe, galloping horses and yurts", places: "Hulunbuir · Zoige · Bayanbulak",
-    intro: "China's northern steppe is where the country turns green and endless — rolling grassland dotted with grazing sheep, galloping horses and white Mongolian yurts, under skies that seem to go on forever.",
-    spots: [
-      { name: "Hulunbuir", desc: "China's largest and lushest prairie in Inner Mongolia, along the Russian border — rivers, birch forests and horse-riding camps.", season: "Jun–Aug", activity: "Horse riding, yurt stays" },
-      { name: "Zoige", desc: "A high-altitude 'jade' grassland on the Sichuan–Gansu border, dotted with wildflowers, yaks and the first bend of the Yellow River.", season: "Jun–Aug", activity: "Scenic drives, horse riding" },
-      { name: "Bayanbulak", desc: "A vast alpine meadow in Xinjiang famous for its 'Nine Bends' river viewpoint at sunset and its wild swans.", season: "Jun–Sep", activity: "Sunset viewpoints" },
-    ],
-    bestWay: "Go in summer (June–August) when the grass is greenest, and stay overnight in a yurt to catch a star-filled sky.",
-  },
-  {
-    slug: "glaciers", name: "Glaciers", icon: "fa-snowflake", gradient: "landscape-glaciers", img: "/images/glaciers-hailuogou.webp",
-    imgAlt: "Glacier and snow peaks of Hailuogou in Sichuan, China",
-    tagline: "Ice falls, snow peaks and thermal springs", places: "Hailuogou · Rongbuk · Meili Snow",
-    intro: "China's glaciers are the frozen spine of its highest ranges — blue ice falls tumbling between peaks and snow mountains that mark the Roof of the World. Several are accessible at unusually low altitude.",
-    spots: [
-      { name: "Hailuogou", desc: "A rare low-altitude glacier in Sichuan with a 1,000m ice fall, reached by cable car and paired with natural hot springs.", season: "Nov–Apr", activity: "Cable car, hot springs" },
-      { name: "Rongbuk Glacier", desc: "The glacier below Everest's north face in Tibet — the closest most travelers ever get to the world's highest peak.", season: "Apr–Jun, Sep–Oct", activity: "Base-camp road" },
-      { name: "Meili Snow Mountain", desc: "A sacred 6,740m peak range in Yunnan known for the 'sunrise on golden mountain' effect over Kawagebo.", season: "Oct–Mar", activity: "Viewpoints" },
-    ],
-    bestWay: "Winter and early spring give the clearest glacier views — summer clouds often hide the peaks.",
-  },
-  {
-    slug: "forests", name: "Forests", icon: "fa-tree", gradient: "landscape-forests", img: "/images/forests-xishuangbanna.webp",
-    imgAlt: "Tropical rainforest of Xishuangbanna in Yunnan, China",
-    tagline: "Ancient woodlands, bamboo seas and rainforest", places: "Shennongjia · Xishuangbanna · Shunan",
-    intro: "China's forests range from the misty primeval woodlands of the center to the last tropical rainforest in the south — refuges for pandas, golden monkeys and wild elephants.",
-    spots: [
-      { name: "Shennongjia", desc: "A mysterious UNESCO-listed primeval forest in Hubei — deep canyons, cloud forest and the golden snub-nosed monkey.", season: "May–Oct", activity: "Trails, monkey viewing" },
-      { name: "Xishuangbanna", desc: "China's only tropical rainforest in southern Yunnan — wild Asian elephants, tea mountains and Dai culture.", season: "Nov–Apr", activity: "Botanical gardens, elephant valley", url: "https://yunnan-province.com" },
-      { name: "Shunan Bamboo Sea", desc: "A 120 km² ocean of emerald bamboo in Sichuan, crisscrossed by quiet paths, waterfalls and a lake to boat across.", season: "Year-round", activity: "Walking, boating" },
-    ],
-    bestWay: "Visit Shennongjia in autumn for mist and color; Xishuangbanna in winter for dry, cool jungle weather.",
-  },
-  {
-    slug: "wetlands", name: "Wetlands", icon: "fa-droplet", gradient: "landscape-wetlands", img: "/images/plateau-pudacuo.webp",
-    imgAlt: "Wetland lakes of Pudacuo National Park in Shangri-La, China",
-    tagline: "Bird sanctuaries, marshes and river deltas", places: "Yellow River Delta · Zoige Marshes",
-    intro: "China's wetlands are the meeting of water and land — river deltas, marshes and reed beds that rank among the world's most important stopovers for migratory birds.",
-    spots: [
-      { name: "Yellow River Delta", desc: "Where the Yellow River empties into the Bohai Sea — a UNESCO-listed sanctuary for migratory birds, and a 'red carpet' of suaeda plants each autumn.", season: "Sep–Nov", activity: "Boardwalks, birdwatching" },
-      { name: "Zoige Marshes", desc: "High-altitude peat bogs on the Tibetan plateau — the source of the Yellow River and home to black-necked cranes.", season: "Jun–Aug", activity: "Birdwatching" },
-      { name: "Yancheng", desc: "Coastal wetlands in Jiangsu protecting the red-crowned crane and the endangered milu deer.", season: "Nov–Feb", activity: "Crane viewing" },
-    ],
-    bestWay: "Bring binoculars and go in migration season — autumn (Sep–Nov) is peak for birds and the red suaeda carpet.",
-  },
-  {
-    slug: "plateau", name: "Plateau", icon: "fa-earth-asia", gradient: "landscape-plateau", img: "/images/plateau-tibet.webp",
-    imgAlt: "Tibetan plateau landscape with snow mountains, China",
-    tagline: "The Roof of the World — high plains and peaks", places: "Tibet · Shangri-La · Hoh Xil",
-    intro: "The Tibetan Plateau — the 'Roof of the World' — is a world apart: high plains at 4,000m, turquoise sacred lakes, glacier-topped ranges and monasteries clinging to cliffs. Altitude is part of the experience.",
-    spots: [
-      { name: "Lhasa & Tibet", desc: "The plateau's cultural heart — Potala Palace, Jokhang Temple, and the turquoise lakes and passes of the high Himalaya.", season: "May–Oct", activity: "Sightseeing, overland drives", url: "https://tibet-lhasa-potala.com" },
-      { name: "Shangri-La", desc: "A Tibetan town at 3,200m in Yunnan — Songzanlin Monastery, alpine lakes and snow-capped gorges of the Meili range.", season: "Apr–Nov", activity: "Monastery visits, hiking", url: "https://shangri-la-yunnan.com" },
-      { name: "Hoh Xil", desc: "A vast, empty UNESCO wilderness in Qinghai — home to the Tibetan antelope and one of the wildest places left in China.", season: "Jun–Sep", activity: "Overland traverse" },
-    ],
-    bestWay: "Acclimatize first (one night at ~3,000m), go May–October to avoid snow, and carry a warm layer even in summer.",
-  },
-];
-
 // ── Trip Finder destinations ──
 const destinations = [
   { name: "Guilin & Yangshuo", landscape: "karst", landscapeLabel: "Karst", seasons: ["spring", "summer", "autumn"], difficulty: "easy", altitude: "low", days: "3–4 days", reason: "Iconic karst peaks, bamboo rafts and bike rides through rice fields — the classic China postcard.", guide: { location: "Guangxi, southern China", ticket: "Li River cruise ~CNY 360; parks from CNY 60", transport: "Fly to Guilin (KWL) or high-speed rail from Guangzhou (2.5h)", tips: "Skip the big boats — a Yulong River bamboo raft is quieter and prettier" }, url: "https://guilin-yang-shuo.com" },
@@ -322,7 +199,7 @@ const author = {
         <p class="mt-6 max-w-lg text-lg leading-relaxed text-white/90 drop-shadow">From Zhangjiajie's floating peaks to Jiuzhaigou's turquoise lakes — the 10 best nature places in China, ranked with seasons, costs and honest advice.</p>
         <div class="mt-8 flex flex-wrap gap-3">
           <a href="#trip-finder" class="rounded-full bg-gradient-to-r from-[#0f766e] to-[#2dd4bf] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-[#0f766e]/20 transition-all hover:scale-105">Find My Trip</a>
-          <a href="#landscapes" class="rounded-full border border-white/40 bg-white/10 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur transition-all hover:bg-white/20">Explore Landscapes</a>
+          <a href="/landscapes/" class="rounded-full border border-white/40 bg-white/10 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur transition-all hover:bg-white/20">Explore Landscapes</a>
         </div>
       </div>
     </div>
@@ -444,69 +321,33 @@ const author = {
     </div>
   </section>
 
-  <!-- 4. Landscapes matrix -->
+    <!-- 4. Landscapes matrix (teaser) -->
   <section id="landscapes" class="relative bg-gradient-to-b from-[#edeae3] to-[#f8f7f4] py-20 md:py-28">
     <div class="mx-auto max-w-7xl px-6">
       <div class="mb-12 max-w-2xl">
         <span class="tag tag-warm mb-4">10 Landscapes</span>
         <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">Every Landscape China Has</h2>
-        <p class="mt-4 text-lg text-[#5c5a4c]">China spans four climate zones and every major landform on Earth. Here's how to make sense of it.</p>
+        <p class="mt-4 text-lg text-[#5c5a4c]">Karst peaks, rainbow danxia, glaciers, deserts and the high plateau — China has every major landform on Earth. Here are the ten, with the best place to see each.</p>
       </div>
       <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {landscapes.map((l, i) => (
-          <details class={`qa group scroll-reveal overflow-hidden rounded-2xl text-white shadow-sm ${l.gradient}`} open={i < 2}>
-            <summary class="cursor-pointer p-6">
-              <div class="flex items-start justify-between">
-                <Icon name={l.icon} class="text-2xl opacity-90" />
-                <svg class="qa-chevron h-5 w-5 shrink-0 opacity-80" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-              </div>
-              <h3 class="mt-4 text-xl font-bold leading-tight">{l.name}</h3>
-              <p class="mt-2 text-sm leading-relaxed text-white/85">{l.tagline}</p>
-              <img src={l.img} alt={l.imgAlt} class="mt-4 h-36 w-full rounded-xl object-cover shadow-lg" loading="lazy" />
-              <p class="mt-4 border-t border-white/25 pt-3 text-xs font-medium text-white/75">{l.places}</p>
-            </summary>
-            <div class="px-6 pb-6">
-              <p class="text-sm leading-relaxed text-white/95">{l.intro}</p>
-              <div class="mt-4 space-y-3">
-                {l.spots.map((s) => (
-                  <div class="rounded-xl bg-black/20 p-4">
-                    <div class="flex items-start justify-between gap-2">
-                      <p class="font-semibold text-white">{s.name}</p>
-                      <span class="shrink-0 text-xs text-white/70">{s.season}</span>
-                    </div>
-                    <p class="mt-1 text-sm leading-relaxed text-white/85">{s.desc}</p>
-                    <p class="mt-2 text-xs font-medium text-white/70"><Icon name="fa-person-hiking" class="mr-1" />{s.activity}</p>
-                    {s.url && (
-                      <a href={s.url} target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-white/90 transition-colors hover:text-white">
-                        Full guide <Icon name="fa-arrow-up-right-from-square" class="text-[10px]" />
-                      </a>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <p class="mt-4 rounded-xl bg-black/20 p-4 text-sm leading-relaxed text-white/90"><strong class="font-semibold">Best way:</strong> {l.bestWay}</p>
-            </div>
-          </details>
-        ))}
+        <a href="/landscapes/#karst" class="card-playful group rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm"><h3 class="text-lg font-bold text-[#1c1a16] group-hover:text-[#0f766e]">Karst</h3><p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">Tower limestone peaks above jade rivers — Guilin & Yangshuo.</p></a>
+        <a href="/landscapes/#danxia" class="card-playful group rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm"><h3 class="text-lg font-bold text-[#1c1a16] group-hover:text-[#0f766e]">Danxia</h3><p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">Rainbow-striped red cliffs — Zhangye's Rainbow Mountains.</p></a>
+        <a href="/landscapes/#mountains" class="card-playful group rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm"><h3 class="text-lg font-bold text-[#1c1a16] group-hover:text-[#0f766e]">Mountains</h3><p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">Granite spires and cloud seas — Huangshan and Zhangjiajie.</p></a>
+        <a href="/landscapes/#lakes" class="card-playful group rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm"><h3 class="text-lg font-bold text-[#1c1a16] group-hover:text-[#0f766e]">Lakes</h3><p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">Turquoise alpine water — Jiuzhaigou and Qinghai Lake.</p></a>
+        <a href="/landscapes/#deserts" class="card-playful group rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm"><h3 class="text-lg font-bold text-[#1c1a16] group-hover:text-[#0f766e]">Deserts</h3><p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">Singing dunes and oases — Dunhuang's Crescent Lake.</p></a>
+        <a href="/landscapes/#grasslands" class="card-playful group rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm"><h3 class="text-lg font-bold text-[#1c1a16] group-hover:text-[#0f766e]">Grasslands</h3><p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">Endless steppe and yurts — Hulunbuir in summer.</p></a>
+        <a href="/landscapes/#glaciers" class="card-playful group rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm"><h3 class="text-lg font-bold text-[#1c1a16] group-hover:text-[#0f766e]">Glaciers</h3><p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">Low-altitude ice falls — Hailuogou above Mount Gongga.</p></a>
+        <a href="/landscapes/#forests" class="card-playful group rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm"><h3 class="text-lg font-bold text-[#1c1a16] group-hover:text-[#0f766e]">Forests</h3><p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">Primeval woodland and rainforest — Shennongjia, Xishuangbanna.</p></a>
+        <a href="/landscapes/#wetlands" class="card-playful group rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm"><h3 class="text-lg font-bold text-[#1c1a16] group-hover:text-[#0f766e]">Wetlands</h3><p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">Bird sanctuaries and peat bogs — the Yellow River Delta.</p></a>
+        <a href="/landscapes/#plateau" class="card-playful group rounded-2xl border border-[#d5d0c4]/40 bg-white p-6 shadow-sm"><h3 class="text-lg font-bold text-[#1c1a16] group-hover:text-[#0f766e]">Plateau</h3><p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">The Roof of the World — Tibet, Shangri-La and the high passes.</p></a>
       </div>
-      <div class="mt-6 flex justify-center">
-        <button id="expand-all" class="rounded-full border border-[#d5d0c4] bg-white px-5 py-2.5 text-sm font-semibold text-[#0f766e] shadow-sm transition-colors hover:border-[#14b8a6] hover:text-[#115e59]">Expand all landscapes</button>
+      <div class="mt-8 text-center">
+        <a href="/landscapes/" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#0f766e] to-[#2dd4bf] px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:scale-105">Explore all 10 landscapes</a>
       </div>
     </div>
-    <script is:inline>
-      const expandBtn = document.getElementById("expand-all");
-      if (expandBtn) {
-        expandBtn.addEventListener("click", () => {
-          const cards = document.querySelectorAll("#landscapes details");
-          const allOpen = [...cards].every((d) => d.open);
-          cards.forEach((d) => { d.open = !allOpen; });
-          expandBtn.textContent = allOpen ? "Expand all landscapes" : "Collapse all landscapes";
-        });
-      }
-    </script>
   </section>
 
-  <!-- 5. Compare -->
+<!-- 5. Compare -->
   <section id="compare" class="relative py-20 md:py-28">
     <div class="mx-auto max-w-7xl px-6">
       <div class="mb-12 max-w-2xl">
