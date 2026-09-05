@@ -1,5 +1,8 @@
 ---
 import "../styles/global.css";
+import "@fontsource/dm-serif-display/400.css";
+import "@fontsource/dm-serif-display/400-italic.css";
+import "@fontsource-variable/dm-sans";
 import { SITE, NAV } from "../consts";
 
 interface Props {
@@ -39,9 +42,6 @@ const canonical = Astro.url.pathname === "/"
       <link rel="preload" as="image" href="/images/hero-karst.webp" fetchpriority="high" />
     )}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
     <link rel="canonical" href={canonical} />
     <meta name="robots" content={Astro.props.noindex ? "noindex, nofollow" : "index, follow"} />
     <title>{title}</title>
