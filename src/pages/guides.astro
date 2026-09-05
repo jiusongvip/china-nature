@@ -2,6 +2,24 @@
 import Layout from "../layouts/Layout.astro";
 import Icon from "../components/Icon.astro";
 
+const destinations = [
+  { name: "Guilin & Yangshuo", landscape: "karst", landscapeLabel: "Karst", seasons: ["spring", "summer", "autumn"], difficulty: "easy", altitude: "low", days: "3–4 days", reason: "Iconic karst peaks, bamboo rafts and bike rides through rice fields — the classic China postcard.", guide: { location: "Guangxi, southern China", ticket: "Li River cruise ~CNY 360; parks from CNY 60", transport: "Fly to Guilin (KWL) or high-speed rail from Guangzhou (2.5h)", tips: "Skip the big boats — a Yulong River bamboo raft is quieter and prettier" }, url: "https://guilin-yang-shuo.com" },
+  { name: "Zhangjiajie", landscape: "mountains", landscapeLabel: "Mountains", seasons: ["spring", "autumn"], difficulty: "moderate", altitude: "low", days: "3 days", reason: "3,000 sandstone pillars that inspired Avatar, plus the world's tallest outdoor elevator.", guide: { location: "Hunan, 32km from Zhangjiajie city", ticket: "Forest park ~CNY 225 (4-day); elevators extra", transport: "High-speed rail to Zhangjiajie West, then shuttle to Wulingyuan gate", tips: "Stay in Wulingyuan and enter at opening time to beat elevator queues" }, url: "https://zhangjiajie-national-park.com" },
+  { name: "Jiuzhaigou Valley", landscape: "lakes", landscapeLabel: "Lakes", seasons: ["autumn"], difficulty: "easy", altitude: "moderate", days: "2–3 days", reason: "Unreal turquoise lakes, waterfalls and snow peaks in a Tibetan valley — best in autumn color.", guide: { location: "Sichuan, 400km north of Chengdu", ticket: "~CNY 169–280; advance reservation required", transport: "Fly from Chengdu (1h) or bus (8h); book tickets online first", tips: "Go in late October for peak color, enter at 7am, buy tickets days ahead" } },
+  { name: "Huangshan", landscape: "mountains", landscapeLabel: "Mountains", seasons: ["year-round"], difficulty: "moderate", altitude: "moderate", days: "2–3 days", reason: "The 'loveliest mountain of China' — granite pines, cloud seas and sunrise above the mist.", guide: { location: "Anhui, 1.5h from Huangshan city", ticket: "~CNY 190 + cable cars ~CNY 80–90", transport: "High-speed rail to Huangshan North, then bus to the scenic area", tips: "Stay one night on the summit to catch sunrise without the dawn climb" } },
+  { name: "Zhangye Danxia", landscape: "danxia", landscapeLabel: "Danxia", seasons: ["year-round"], difficulty: "easy", altitude: "low", days: "1–2 days", reason: "Rainbow-striped hills that look like a painting — most vivid at sunrise and sunset.", guide: { location: "Gansu, 40km from Zhangye city", ticket: "~CNY 75 + shuttle bus", transport: "Fly or high-speed rail to Zhangye, then taxi to the park", tips: "Go at sunset; the west gate has shorter lines than the main entrance" } },
+  { name: "Dunhuang & Gobi", landscape: "deserts", landscapeLabel: "Deserts", seasons: ["spring", "autumn"], difficulty: "easy", altitude: "low", days: "3 days", reason: "Singing sand dunes, the Crescent Lake oasis and Mogao Caves on the Silk Road.", guide: { location: "Gansu, far west on the Silk Road", ticket: "Mogao Caves from CNY 238 (book ahead); dunes ~CNY 110", transport: "Fly to Dunhuang from Lanzhou/Xi'an, or overnight train", tips: "Mogao Caves sells out — reserve a week ahead; hit the dunes at dusk" }, url: "https://dunhuang-jiuquan.com" },
+  { name: "Hulunbuir Grassland", landscape: "grasslands", landscapeLabel: "Grasslands", seasons: ["summer"], difficulty: "easy", altitude: "low", days: "3 days", reason: "China's largest prairie — endless green, horse riding and Mongolian yurt stays in summer.", guide: { location: "Inner Mongolia, on the Russian border", ticket: "Grassland access via tour/camp, ~CNY 100–300", transport: "Fly to Hailar (HLD) from Beijing, then rent a car or join a tour", tips: "Go June–August for green grass; book yurt stays ahead in July" } },
+  { name: "Hailuogou Glacier", landscape: "glaciers", landscapeLabel: "Glaciers", seasons: ["winter", "spring"], difficulty: "moderate", altitude: "high", days: "2–3 days", reason: "A rare low-altitude glacier with an ice fall, hot springs and views of Mount Gongga.", guide: { location: "Sichuan, 300km from Chengdu", ticket: "~CNY 90 + cable car CNY 150", transport: "Bus from Chengdu (6h) via Luding, or drive", tips: "Winter has the clearest views; book the hot-spring hotel inside the park" } },
+  { name: "Xishuangbanna", landscape: "forests", landscapeLabel: "Forests", seasons: ["winter", "spring"], difficulty: "easy", altitude: "low", days: "3 days", reason: "China's only tropical rainforest — wild elephants, tea mountains and Dai culture.", guide: { location: "Yunnan, on the Laos border", ticket: "Botanical Garden ~CNY 75; Elephant Valley ~CNY 80", transport: "Fly to Jinghong (JHG) from Kunming or Chongqing", tips: "Come in winter for dry, cool weather; see elephants at morning feeding" }, url: "https://yunnan-province.com" },
+  { name: "Yellow River Delta", landscape: "wetlands", landscapeLabel: "Wetlands", seasons: ["autumn", "winter"], difficulty: "easy", altitude: "low", days: "1–2 days", reason: "A migratory-bird sanctuary where the Yellow River meets the sea — a red suaeda 'carpet' in autumn.", guide: { location: "Shandong, at the Yellow River mouth", ticket: "~CNY 60–90", transport: "Drive or take a bus from Dongying city", tips: "Autumn (Sep–Nov) brings the red suaeda carpet and peak bird migration" } },
+  { name: "Shangri-La", landscape: "plateau", landscapeLabel: "Plateau", seasons: ["spring", "autumn"], difficulty: "moderate", altitude: "high", days: "3–4 days", reason: "Tibetan plateau at 3,200m — alpine lakes, monasteries and snow-capped gorges.", guide: { location: "Yunnan, at 3,200m altitude", ticket: "Songzanlin Monastery ~CNY 90; Pudacuo Park ~CNY 100", transport: "Fly to Diqing (DIG) from Kunming/Chengdu, or bus from Lijiang", tips: "Spend the first night acclimatizing; carry layers even in summer" }, url: "https://shangri-la-yunnan.com" },
+  { name: "Tibet & Lhasa", landscape: "plateau", landscapeLabel: "Plateau", seasons: ["summer", "autumn"], difficulty: "challenging", altitude: "very-high", days: "4–7 days", reason: "The Roof of the World — Potala Palace, turquoise lakes and Himalayan passes.", guide: { location: "Tibet Autonomous Region, 3,650m altitude", ticket: "Potala Palace ~CNY 200 (book ahead)", transport: "Fly to Lhasa from Chengdu/Xi'an, or the Qinghai–Tibet railway", tips: "Foreign travelers need a Tibet permit via an agency; acclimatize 2 days in Lhasa" }, url: "https://tibet-lhasa-potala.com" },
+];
+const seasonLabelMap = { spring: "Spring", summer: "Summer", autumn: "Autumn", winter: "Winter", "year-round": "Year-round" };
+const difficultyLabelMap = { easy: "Easy", moderate: "Moderate", challenging: "Challenging" };
+const altitudeLabelMap = { low: "Low", moderate: "1,500–3,000m", high: "3,000–4,500m", "very-high": "4,500m+" };
+
 // ── What to wear (by climate zone) ──
 const whatToWear = [
   { zone: "High plateau — Tibet, Shangri-La, Jiuzhaigou", temp: "Cold mornings, fierce sun, possible snow even in summer", items: "Thermal base layer, fleece or down jacket, windproof shell, wide-brim hat, UV sunglasses, SPF 50 sunscreen, lip balm, altitude medication" },
@@ -340,6 +358,47 @@ const description = "The practical companion to China's nature: what to pack per
     </div>
   </section>
 
+  <!-- 3c. Destination cheat sheet -->
+  <section id="cheat-sheet" class="relative border-t border-[#d5d0c4] bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-12 max-w-2xl">
+        <span class="tag tag-warm mb-4">At a Glance</span>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">All 12 Destinations, Compared</h2>
+        <p class="mt-4 text-lg text-[#5c5a4c]">Seasons, difficulty, altitude and time needed — the full picture in one table, no clicks required.</p>
+      </div>
+      <div class="overflow-x-auto rounded-2xl border border-[#d5d0c4]/40 bg-white shadow-sm">
+        <table class="w-full min-w-[980px] border-collapse text-sm">
+          <thead>
+            <tr class="bg-[#0f766e] text-left text-white">
+              <th class="px-4 py-3.5 font-semibold">Destination</th>
+              <th class="px-4 py-3.5 font-semibold">Landscape</th>
+              <th class="px-4 py-3.5 font-semibold">Best season</th>
+              <th class="px-4 py-3.5 font-semibold">Difficulty</th>
+              <th class="px-4 py-3.5 font-semibold">Altitude</th>
+              <th class="px-4 py-3.5 font-semibold">Days</th>
+              <th class="px-4 py-3.5 font-semibold">Entry fee</th>
+              <th class="px-4 py-3.5 font-semibold">Why go</th>
+            </tr>
+          </thead>
+          <tbody>
+            {destinations.map((d, i) => (
+              <tr class={i % 2 ? "border-t border-[#d5d0c4]/40 bg-[#f8f7f4]/60" : "border-t border-[#d5d0c4]/40"}>
+                <td class="px-4 py-3.5 font-semibold text-[#0f766e]">{d.name}{d.url && <a href={d.url} target="_blank" rel="noopener" class="ml-1.5 text-xs text-[#14b8a6] hover:underline" aria-label={`${d.name} guide`}><Icon name="fa-arrow-up-right-from-square" /></a>}</td>
+                <td class="px-4 py-3.5 text-[#5c5a4c]">{d.landscapeLabel}</td>
+                <td class="px-4 py-3.5 text-[#5c5a4c]">{d.seasons.map((s) => seasonLabelMap[s]).join(", ")}</td>
+                <td class="px-4 py-3.5 text-[#5c5a4c]">{difficultyLabelMap[d.difficulty]}</td>
+                <td class="px-4 py-3.5 text-[#5c5a4c]">{altitudeLabelMap[d.altitude]}</td>
+                <td class="px-4 py-3.5 font-medium text-[#1c1a16]">{d.days}</td>
+                <td class="px-4 py-3.5 text-xs text-[#5c5a4c]">{d.guide.ticket}</td>
+                <td class="px-4 py-3.5 text-[#5c5a4c]">{d.reason}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-4 text-xs text-[#5c5a4c]/70">Costs and logistics change — check the latest ticket prices before you book. Altitude bands: low = below 1,500m.</p>
+    </div>
+  </section>
 
   <!-- 11. Heritage sites -->
   <section id="unesco" class="relative border-t border-[#d5d0c4] bg-white py-20">

@@ -337,7 +337,7 @@ const author = {
         <p class="mt-4 text-lg text-[#5c5a4c]">Ranked by a writer who has personally visited every one of them — each pick is worth a dedicated trip.</p>
         <div class="mt-5 flex flex-wrap gap-2">
           <a href="#compare" class="rounded-full border border-[#d5d0c4] bg-white px-4 py-1.5 text-xs font-semibold text-[#0f766e] transition-colors hover:border-[#14b8a6]">Compare the big three</a>
-          <a href="#cheat-sheet" class="rounded-full border border-[#d5d0c4] bg-white px-4 py-1.5 text-xs font-semibold text-[#0f766e] transition-colors hover:border-[#14b8a6]">All 12 destinations</a>
+          <a href="/guides/#cheat-sheet" class="rounded-full border border-[#d5d0c4] bg-white px-4 py-1.5 text-xs font-semibold text-[#0f766e] transition-colors hover:border-[#14b8a6]">All 12 destinations</a>
           <a href="#packing" class="rounded-full border border-[#d5d0c4] bg-white px-4 py-1.5 text-xs font-semibold text-[#0f766e] transition-colors hover:border-[#14b8a6]">What to pack</a>
           <a href="#faq" class="rounded-full border border-[#d5d0c4] bg-white px-4 py-1.5 text-xs font-semibold text-[#0f766e] transition-colors hover:border-[#14b8a6]">Quick answers</a>
         </div>
@@ -419,48 +419,6 @@ const author = {
         <p class="mt-4 text-lg text-[#5c5a4c]">Filter by landform, season, difficulty and altitude — get a shortlist of destinations that actually fit your trip.</p>
       </div>
       <TripFinder destinations={destinations} />
-    </div>
-  </section>
-
-  <!-- 3c. Destination cheat sheet -->
-  <section id="cheat-sheet" class="relative border-t border-[#d5d0c4] bg-white py-20 md:py-28">
-    <div class="mx-auto max-w-7xl px-6">
-      <div class="mb-12 max-w-2xl">
-        <span class="tag tag-warm mb-4">At a Glance</span>
-        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">All 12 Destinations, Compared</h2>
-        <p class="mt-4 text-lg text-[#5c5a4c]">Seasons, difficulty, altitude and time needed — the full picture in one table, no clicks required.</p>
-      </div>
-      <div class="overflow-x-auto rounded-2xl border border-[#d5d0c4]/40 bg-white shadow-sm">
-        <table class="w-full min-w-[980px] border-collapse text-sm">
-          <thead>
-            <tr class="bg-[#0f766e] text-left text-white">
-              <th class="px-4 py-3.5 font-semibold">Destination</th>
-              <th class="px-4 py-3.5 font-semibold">Landscape</th>
-              <th class="px-4 py-3.5 font-semibold">Best season</th>
-              <th class="px-4 py-3.5 font-semibold">Difficulty</th>
-              <th class="px-4 py-3.5 font-semibold">Altitude</th>
-              <th class="px-4 py-3.5 font-semibold">Days</th>
-              <th class="px-4 py-3.5 font-semibold">Entry fee</th>
-              <th class="px-4 py-3.5 font-semibold">Why go</th>
-            </tr>
-          </thead>
-          <tbody>
-            {destinations.map((d, i) => (
-              <tr class={i % 2 ? "border-t border-[#d5d0c4]/40 bg-[#f8f7f4]/60" : "border-t border-[#d5d0c4]/40"}>
-                <td class="px-4 py-3.5 font-semibold text-[#0f766e]">{d.name}{d.url && <a href={d.url} target="_blank" rel="noopener" class="ml-1.5 text-xs text-[#14b8a6] hover:underline" aria-label={`${d.name} guide`}><Icon name="fa-arrow-up-right-from-square" /></a>}</td>
-                <td class="px-4 py-3.5 text-[#5c5a4c]">{d.landscapeLabel}</td>
-                <td class="px-4 py-3.5 text-[#5c5a4c]">{d.seasons.map((s) => seasonLabelMap[s]).join(", ")}</td>
-                <td class="px-4 py-3.5 text-[#5c5a4c]">{difficultyLabelMap[d.difficulty]}</td>
-                <td class="px-4 py-3.5 text-[#5c5a4c]">{altitudeLabelMap[d.altitude]}</td>
-                <td class="px-4 py-3.5 font-medium text-[#1c1a16]">{d.days}</td>
-                <td class="px-4 py-3.5 text-xs text-[#5c5a4c]">{d.guide.ticket}</td>
-                <td class="px-4 py-3.5 text-[#5c5a4c]">{d.reason}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p class="mt-4 text-xs text-[#5c5a4c]/70">Costs and logistics change — check the latest ticket prices before you book. Altitude bands: low = below 1,500m.</p>
     </div>
   </section>
 
