@@ -18,7 +18,7 @@ const cards = [
 ];
 
 const src = "public/images";
-const hero = { name: "hero-karst", width: 1280, quality: 60 };
+const hero = { name: "hero-karst", width: 1200, quality: 55 };
 
 async function toWebp(file, width, quality) {
   const input = `${src}/${file}.webp`;

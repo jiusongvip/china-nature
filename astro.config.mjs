@@ -7,4 +7,5 @@ export default defineConfig({
   site: "https://www.chinanaturetrip.com",
   vite: { plugins: [tailwindcss()] },
   trailingSlash: 'always',
+  build: { inlineStylesheets: 'always' },
 });
