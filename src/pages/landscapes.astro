@@ -126,8 +126,8 @@ const landscapes = [
 ];
 
 
-const title = "China's 10 Landscapes — Karst, Danxia, Mountains, Lakes, Glaciers & More";
-const description = "The 10 landform families of China explained: karst, danxia, mountains, lakes, deserts, grasslands, glaciers, forests, wetlands and the Tibetan plateau — what they are, where to see them, and the best spots.";
+const title = "China's 10 Landscapes: Karst, Danxia, Mountains & More";
+const description = "From karst towers and rainbow danxia to Himalayan glaciers — China's 10 landscape types explained, plus the best place to see each, when to go.";
 ---
 
 <Layout title={title} description={description}>
@@ -145,7 +145,7 @@ const description = "The 10 landform families of China explained: karst, danxia,
     <div class="mx-auto max-w-7xl px-6">
       <div class="mb-12 max-w-2xl">
         <span class="tag tag-warm mb-4">10 Landscapes</span>
-        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">Every Landscape China Has</h2>
+        <h2 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">The 10 Landform Families</h2>
         <p class="mt-4 text-lg text-[#5c5a4c]">China spans four climate zones and every major landform on Earth. Here's how to make sense of it.</p>
       </div>
       <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -156,7 +156,7 @@ const description = "The 10 landform families of China explained: karst, danxia,
                 <Icon name={l.icon} class="text-2xl opacity-90" />
                 <svg class="qa-chevron h-5 w-5 shrink-0 opacity-80" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
               </div>
-              <h3 class="mt-4 text-xl font-bold leading-tight">{l.name}</h3>
+              <h2 class="mt-4 text-xl font-bold leading-tight font-sans">{l.name}</h2>
               <p class="mt-2 text-sm leading-relaxed text-white/85">{l.tagline}</p>
               <img src={l.img} alt={l.imgAlt} class="mt-4 h-36 w-full rounded-xl object-cover shadow-lg" loading="lazy" />
               <p class="mt-4 border-t border-white/25 pt-3 text-xs font-medium text-white/75">{l.places}</p>
