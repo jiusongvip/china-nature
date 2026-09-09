@@ -1,0 +1,264 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Icon from "../components/Icon.astro";
+import { destinations, getSeasonLabel, getDifficultyLabel } from "../data/destinations";
+
+const title = "Explore China's Natural Wonders: 12 Destinations by Landscape & Season";
+const description = "Browse all 12 of China's top nature destinations — karst peaks, rainbow danxia, glaciers, deserts, lakes and plateau — filtered by landscape and best season.";
+
+// Group destinations by landscape, preserving a fixed display order
+const landscapeOrder = ["karst", "mountains", "lakes", "danxia", "deserts", "grasslands", "glaciers", "forests", "wetlands", "plateau"];
+const groups = landscapeOrder
+  .map((landscape) => ({
+    landscape,
+    label: destinations.find((d) => d.landscape === landscape)?.landscapeLabel ?? landscape,
+    items: destinations.filter((d) => d.landscape === landscape),
+  }))
+  .filter((g) => g.items.length > 0);
+
+const landscapeExplainers: Record<string, { blurb: string; highlight: string }> = {
+  karst: { blurb: "Limestone peaks shaped by 250 million years of water erosion, rising from a flat river plain. Best explored by boat or bicycle.", highlight: "Guilin & Yangshuo" },
+  mountains: { blurb: "Granite and sandstone peaks with classical Chinese landscape atmosphere — cloud seas, sunrise views, and ancient pines.", highlight: "Zhangjiajie or Huangshan" },
+  lakes: { blurb: "Turquoise and travertine waters in glacier-carved valleys, often surrounded by snow peaks and Tibetan villages.", highlight: "Jiuzhaigou" },
+  danxia: { blurb: "Striped red sandstone ridges colored by 24 million years of mineral deposition — the rainbow mountains.", highlight: "Zhangye Danxia" },
+  deserts: { blurb: "Gobi dunes, singing sand, and oases — landscape that has been the same for caravans for a thousand years.", highlight: "Dunhuang" },
+  grasslands: { blurb: "Wide open steppe with Mongolian yurts, horse-riding and the Naadam festival in summer.", highlight: "Hulunbuir" },
+  glaciers: { blurb: "Modern ice tongues descending into temperate forest — rare low-altitude glaciers with hot springs and snow peaks.", highlight: "Hailuogou" },
+  forests: { blurb: "China's only tropical rainforest, with wild Asian elephants, ancient pu'er tea trees, and Dai minority villages.", highlight: "Xishuangbanna" },
+  wetlands: { blurb: "Tidal mudflats and freshwater marsh where migratory birds rest — a Ramsar sanctuary at the Yellow River mouth.", highlight: "Yellow River Delta" },
+  plateau: { blurb: "Tibetan plateau, the highest on Earth — alpine lakes, monasteries, and Himalayan passes above 5,000m.", highlight: "Shangri-La or Tibet" },
+};
+
+// Best destination for each season (highest score)
+const seasonPicks = (() => {
+  const picks: { season: string; label: string; dest: typeof destinations[number] | null }[] = [
+    { season: "spring", label: "Spring (Apr–May)", dest: null },
+    { season: "summer", label: "Summer (Jun–Aug)", dest: null },
+    { season: "autumn", label: "Autumn (Sep–Nov)", dest: null },
+    { season: "winter", label: "Winter (Dec–Feb)", dest: null },
+  ];
+  for (const p of picks) {
+    let best: { dest: typeof destinations[number]; score: number } | null = null;
+    for (const d of destinations) {
+      if (!d.whenToGo) continue;
+      const s = d.whenToGo.find((w) => w.label.toLowerCase().startsWith(p.season));
+      if (!s) continue;
+      if (!best || s.score > best.score) {
+        best = { dest: d, score: s.score };
+      }
+    }
+    if (best) p.dest = best.dest;
+  }
+  return picks;
+})();
+
+// Difficulty buckets
+const easyCount = destinations.filter((d) => d.difficulty === "easy").length;
+const moderateCount = destinations.filter((d) => d.difficulty === "moderate").length;
+const challengingCount = destinations.filter((d) => d.difficulty === "challenging").length;
+const total = destinations.length;
+---
+
+<Layout title={title} description={description}>
+  <!-- Header -->
+  <section class="relative border-b border-[#d5d0c4] bg-[#f8f7f4] pt-32 pb-16">
+    <div class="mx-auto max-w-7xl px-6">
+      <nav class="mb-8 flex flex-wrap items-center gap-2 text-sm text-[#5c5a4c]" aria-label="Breadcrumb">
+        <a href="/" class="hover:text-[#0f766e]">Home</a>
+        <span class="text-[#d5d0c4]">/</span>
+        <span class="font-medium text-[#1c1a16]">Destinations</span>
+      </nav>
+      <div class="max-w-3xl">
+        <span class="tag tag-primary mb-4">All Destinations</span>
+        <h1 class="text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">Explore China's Natural Wonders</h1>
+        <p class="mt-4 text-lg leading-relaxed text-[#5c5a4c]">Twelve of China's best nature destinations, grouped by landscape. Pick a landform you love — karst peaks, rainbow danxia, glaciers, deserts or the high plateau — and find the right trip for your season.</p>
+        <div class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div class="rounded-2xl border border-[#d5d0c4]/40 bg-white p-4">
+            <div class="text-2xl font-bold text-[#0f766e]">12</div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-[#5c5a4c]">Destinations</div>
+          </div>
+          <div class="rounded-2xl border border-[#d5d0c4]/40 bg-white p-4">
+            <div class="text-2xl font-bold text-[#0f766e]">10</div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-[#5c5a4c]">Landscape types</div>
+          </div>
+          <div class="rounded-2xl border border-[#d5d0c4]/40 bg-white p-4">
+            <div class="text-2xl font-bold text-[#0f766e]">{easyCount}</div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-[#5c5a4c]">Easy trips</div>
+          </div>
+          <div class="rounded-2xl border border-[#d5d0c4]/40 bg-white p-4">
+            <div class="text-2xl font-bold text-[#0f766e]">5,556m</div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-[#5c5a4c]">Highest peak</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why these 12 -->
+  <section class="relative bg-white py-12 md:py-16">
+    <div class="mx-auto max-w-3xl px-6">
+      <h2 class="text-3xl font-bold tracking-tight text-[#1c1a16]">Why these 12?</h2>
+      <p class="mt-4 text-lg leading-relaxed text-[#5c5a4c]">China has more distinct natural landscapes than almost any country on Earth — six climate zones, every major landform, and altitude from sea level to 8,848m. We picked these twelve because each one is the single best example of a landform that defines a region. Three are UNESCO World Heritage sites; four more are national parks of equal caliber. Together they cover the natural China that most first-time and return travelers want to see, in a trip length of two to four weeks.</p>
+    </div>
+  </section>
+
+  <!-- How to choose -->
+  <section class="relative bg-[#f8f7f4] py-12 md:py-16">
+    <div class="mx-auto max-w-7xl px-6">
+      <h2 class="text-3xl font-bold tracking-tight text-[#1c1a16]">How to choose</h2>
+      <p class="mt-3 max-w-2xl text-base text-[#5c5a4c]">Three quick ways to narrow down — pick the one that fits your trip best.</p>
+      <div class="mt-8 grid gap-5 md:grid-cols-3">
+        <div class="rounded-2xl border border-[#d5d0c4]/40 bg-white p-6">
+          <div class="text-sm font-bold uppercase tracking-widest text-[#0f766e]">By trip length</div>
+          <h3 class="mt-2 text-lg font-bold text-[#1c1a16]">How many days?</h3>
+          <ul class="mt-3 space-y-2 text-sm text-[#5c5a4c]">
+            <li>• <strong>1–2 days:</strong> Zhangye Danxia, Yellow River Delta</li>
+            <li>• <strong>2–3 days:</strong> Huangshan, Jiuzhaigou, Hailuogou</li>
+            <li>• <strong>3–4 days:</strong> Guilin, Zhangjiajie, Dunhuang, Shangri-La, Xishuangbanna, Hulunbuir</li>
+            <li>• <strong>5+ days:</strong> Tibet & Lhasa (permit, altitude, distance)</li>
+          </ul>
+        </div>
+        <div class="rounded-2xl border border-[#d5d0c4]/40 bg-white p-6">
+          <div class="text-sm font-bold uppercase tracking-widest text-[#0f766e]">By season</div>
+          <h3 class="mt-2 text-lg font-bold text-[#1c1a16]">When are you going?</h3>
+          <p class="mt-3 text-sm text-[#5c5a4c]">Most destinations have a peak season. See our <a href="#by-season" class="font-semibold text-[#0f766e] hover:underline">best by season</a> recommendations below — Jiuzhaigou in October and Zhangjiajie in autumn are the most photogenic weeks of the year.</p>
+        </div>
+        <div class="rounded-2xl border border-[#d5d0c4]/40 bg-white p-6">
+          <div class="text-sm font-bold uppercase tracking-widest text-[#0f766e]">By difficulty</div>
+          <h3 class="mt-2 text-lg font-bold text-[#1c1a16]">How fit are you?</h3>
+          <p class="mt-3 text-sm text-[#5c5a4c]"><strong>{easyCount} easy</strong> (no hiking, cable cars and buses handle the work — Guilin, Jiuzhaigou, Danxia, Zhangjiajie, Dunhuang wetlands), <strong>{moderateCount} moderate</strong> (some steps and altitude — Huangshan, Shangri-La, Hailuogou), and <strong>{challengingCount} challenging</strong> (Tibet's altitude).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Best by season -->
+  <section id="by-season" class="relative bg-white py-12 md:py-16">
+    <div class="mx-auto max-w-7xl px-6">
+      <h2 class="text-3xl font-bold tracking-tight text-[#1c1a16]">Best by season</h2>
+      <p class="mt-3 max-w-2xl text-base text-[#5c5a4c]">Each season has a destination at its absolute peak. Travel in that window and you'll see the landscape at its most photogenic.</p>
+      <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {seasonPicks.map((p) => p.dest ? (
+          <a href={`/destinations/${p.dest.slug}/`} class="card-playful group flex flex-col rounded-2xl border border-[#d5d0c4]/40 bg-white p-5 shadow-sm transition-all hover:shadow-md">
+            {p.dest.heroImg && (
+              <img src={p.dest.heroImg} alt={p.dest.heroImgAlt ?? p.dest.name} class="mb-4 h-36 w-full rounded-xl object-cover" loading="lazy" width="640" height="360" />
+            )}
+            <div class="text-xs font-bold uppercase tracking-widest text-[#0f766e]">{p.label}</div>
+            <h3 class="mt-1 text-lg font-bold text-[#1c1a16] group-hover:text-[#0f766e]">{p.dest.name}</h3>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-[#5c5a4c]">{p.dest.reason}</p>
+          </a>
+        ) : null)}
+      </div>
+    </div>
+  </section>
+
+  <!-- All landscapes explained -->
+  <section class="relative bg-[#f8f7f4] py-12 md:py-16">
+    <div class="mx-auto max-w-3xl px-6">
+      <h2 class="text-3xl font-bold tracking-tight text-[#1c1a16]">China's 10 landscapes, explained</h2>
+      <p class="mt-3 text-base text-[#5c5a4c]">What each landform actually is, how it formed, and which destination to start with.</p>
+      <div class="mt-8 space-y-4">
+        {groups.map((group) => (
+          <details class="group rounded-2xl border border-[#d5d0c4]/40 bg-white p-0 overflow-hidden" open={group.landscape === "mountains" || group.landscape === "karst"}>
+            <summary class="flex cursor-pointer items-center justify-between gap-4 p-5 list-none">
+              <div>
+                <div class="text-lg font-bold text-[#1c1a16]">{group.label}</div>
+                <div class="text-xs text-[#5c5a4c]">{group.items.length} destination{group.items.length === 1 ? "" : "s"} · start with {landscapeExplainers[group.landscape]?.highlight}</div>
+              </div>
+              <span class="shrink-0 text-[#14b8a6] transition-transform group-open:rotate-45"><Icon name="fa-arrow-right" class="rotate-90 text-xs" /></span>
+            </summary>
+            <div class="px-5 pb-5 text-base leading-relaxed text-[#5c5a4c]">{landscapeExplainers[group.landscape]?.blurb}</div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Destination groups -->
+  <section class="relative bg-white py-14 md:py-20">
+    <div class="mx-auto max-w-7xl px-6">
+      <h2 class="text-3xl font-bold tracking-tight text-[#1c1a16]">All 12 destinations</h2>
+      <p class="mt-3 max-w-2xl text-base text-[#5c5a4c]">Pick a destination to read the full travel guide — tickets, best season, transport, and a day-by-day itinerary.</p>
+      <div class="mt-10">
+        {groups.map((group) => (
+          <div class="mb-16 last:mb-0">
+            <div class="mb-6 flex items-center gap-3">
+              <h3 class="text-2xl font-bold tracking-tight text-[#1c1a16] md:text-3xl">{group.label}</h3>
+              <span class="rounded-full bg-[#ccfbf1]/60 px-3 py-1 text-xs font-semibold text-[#0f766e]">{group.items.length}</span>
+            </div>
+            <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {group.items.map((d) => (
+                <a href={`/destinations/${d.slug}/`} class="card-playful group flex flex-col rounded-2xl border border-[#d5d0c4]/40 bg-white p-5 shadow-sm transition-all hover:shadow-md">
+                  {d.heroImg && (
+                    <img src={d.heroImg} alt={d.heroImgAlt ?? d.name} class="mb-4 h-44 w-full rounded-xl object-cover" loading="lazy" width="640" height="360" />
+                  )}
+                  <h4 class="text-lg font-bold text-[#1c1a16] transition-colors group-hover:text-[#0f766e]">{d.name}</h4>
+                  <p class="mt-2 flex-1 text-sm leading-relaxed text-[#5c5a4c]">{d.reason}</p>
+                  <div class="mt-4 flex flex-wrap gap-2">
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-[#edeae3] px-3 py-1 text-xs font-semibold text-[#5c5a4c]"><Icon name="fa-person-hiking" class="text-[10px]" />{getDifficultyLabel(d.difficulty)}</span>
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-[#edeae3] px-3 py-1 text-xs font-semibold text-[#5c5a4c]"><Icon name="fa-calendar" class="text-[10px]" />{d.seasons.map(getSeasonLabel).join(", ")}</span>
+                  </div>
+                  <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[#0f766e]">View guide <Icon name="fa-arrow-right" class="text-xs" /></span>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Planning tips -->
+  <section class="relative bg-[#f8f7f4] py-12 md:py-16">
+    <div class="mx-auto max-w-3xl px-6">
+      <h2 class="text-3xl font-bold tracking-tight text-[#1c1a16]">Planning tips</h2>
+      <div class="mt-6 space-y-4">
+        <div class="rounded-2xl border border-[#d5d0c4]/40 bg-white p-5">
+          <div class="flex items-start gap-3">
+            <span class="mt-0.5 shrink-0 text-[#14b8a6]"><Icon name="fa-tree" class="text-base" /></span>
+            <div>
+              <h3 class="font-bold text-[#1c1a16]">Use high-speed rail as your backbone</h3>
+              <p class="mt-1 text-sm leading-relaxed text-[#5c5a4c]">China's HSR network reaches 9 of these 12 destinations directly (Beijing/Shanghai/Chengdu/Kunming to Guilin, Zhangjiajie, Huangshan, Jiuzhaigou, Lijiang, etc.). It's faster than flying for distances under 1,000 km and avoids the security and weather delays of domestic flights. The exceptions are remote parks: Zhangye Danxia, Hailuogou, Hulunbuir, Shangri-La and Tibet all need a regional flight or long drive.</p>
+            </div>
+          </div>
+        </div>
+        <div class="rounded-2xl border border-[#d5d0c4]/40 bg-white p-5">
+          <div class="flex items-start gap-3">
+            <span class="mt-0.5 shrink-0 text-[#14b8a6]"><Icon name="fa-calendar" class="text-base" /></span>
+            <div>
+              <h3 class="font-bold text-[#1c1a16]">Book Jiuzhaigou, Tibet, and Danxia tickets ahead</h3>
+              <p class="mt-1 text-sm leading-relaxed text-[#5c5a4c]">Three of the 12 have a hard daily cap: Jiuzhaigou (tied to your passport, releases 14 days ahead), Tibet (foreign travelers need a permit via an agency, 15+ days ahead), and Zhangye Danxia (no cap but the park sells out on holiday weekends). The other 9 are walk-up friendly.</p>
+            </div>
+          </div>
+        </div>
+        <div class="rounded-2xl border border-[#d5d0c4]/40 bg-white p-5">
+          <div class="flex items-start gap-3">
+            <span class="mt-0.5 shrink-0 text-[#14b8a6]"><Icon name="fa-mountain-sun" class="text-base" /></span>
+            <div>
+              <h3 class="font-bold text-[#1c1a16]">Acclimatize for high-altitude destinations</h3>
+              <p class="mt-1 text-sm leading-relaxed text-[#5c5a4c]">Shangri-La (3,200m) and Tibet (3,650m) need 1–2 days of rest on arrival before any trekking. Drink water, avoid alcohol, and consider altitude medication. Jiuzhaigou (2,000m) and Huangshan (1,860m) are also above 2,000m but rarely cause issues for healthy travelers.</p>
+            </div>
+          </div>
+        </div>
+        <div class="rounded-2xl border border-[#d5d0c4]/40 bg-white p-5">
+          <div class="flex items-start gap-3">
+            <span class="mt-0.5 shrink-0 text-[#14b8a6]"><Icon name="fa-arrow-right" class="text-base" /></span>
+            <div>
+              <h3 class="font-bold text-[#1c1a16]">Combine pairs to save travel time</h3>
+              <p class="mt-1 text-sm leading-relaxed text-[#5c5a4c]">Zhangjiajie and Guilin are 6 hours by HSR — pair for a 7-day karst-and-pillars trip. Jiuzhaigou and Hailuogou are both in Sichuan — pair for 5 days of lakes and glaciers. Dunhuang and Zhangye Danxia are 2 hours apart — pair for a 4-day Silk Road extension. Tibet and Shangri-La pair naturally as a 7-day Yunnan-to-Tibet overland.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="relative bg-gradient-to-b from-[#edeae3] to-[#f8f7f4] py-16">
+    <div class="mx-auto max-w-3xl px-6 text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-[#1c1a16]">Not sure where to start?</h2>
+      <p class="mt-3 text-lg text-[#5c5a4c]">Use the trip finder on the homepage to filter by landform, season, difficulty and altitude.</p>
+      <a href="/#trip-finder" class="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#0f766e] to-[#2dd4bf] px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:scale-105">Find my trip <Icon name="fa-arrow-right" class="text-xs" /></a>
+    </div>
+  </section>
+</Layout>

@@ -9,6 +9,7 @@ export const SITE = {
 // homepage section from any subpage (a bare "#anchor" would target the current page).
 export const NAV = [
   { label: "Trip Finder", href: "/#trip-finder" },
+  { label: "Destinations", href: "/explore/" },
   { label: "Landscapes", href: "/landscapes/" },
   { label: "Compare", href: "/#compare" },
   { label: "Wildlife", href: "/#wildlife" },
