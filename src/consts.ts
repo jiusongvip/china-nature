@@ -10,6 +10,7 @@ export const SITE = {
 export const NAV = [
   { label: "Trip Finder", href: "/#trip-finder" },
   { label: "Destinations", href: "/explore/" },
+  { label: "Collections", href: "/collections/" },
   { label: "Landscapes", href: "/landscapes/" },
   { label: "Compare", href: "/#compare" },
   { label: "Wildlife", href: "/#wildlife" },

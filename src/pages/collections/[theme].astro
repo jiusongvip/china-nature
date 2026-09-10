@@ -1,0 +1,267 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Icon from "../../components/Icon.astro";
+import { collections, getCollection } from "../../data/collections";
+import { getDestination, getDifficultyLabel, getAltitudeLabel, getSeasonLabel } from "../../data/destinations";
+
+export function getStaticPaths() {
+  return collections.map((c) => ({ params: { theme: c.slug } }));
+}
+
+const { theme } = Astro.params;
+const collection = getCollection(theme!);
+if (!collection) return Astro.redirect("/404");
+
+const siteUrl = "https://www.chinanaturetrip.com";
+const pageUrl = `${siteUrl}/collections/${collection.slug}/`;
+const title = collection.title;
+const description = collection.metaDescription;
+
+const members = collection.destinationSlugs
+  .map((s) => getDestination(s))
+  .filter((d): d is NonNullable<typeof d> => Boolean(d));
+
+const faqSchema = collection.faqs?.length
+  ? {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: collection.faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    }
+  : undefined;
+---
+
+<Layout title={title} description={description}>
+  <!-- Breadcrumb -->
+  <section class="relative border-b border-[#d5d0c4] bg-white pt-28 pb-8">
+    <div class="mx-auto max-w-7xl px-6">
+      <nav class="flex flex-wrap items-center gap-2 text-sm text-[#5c5a4c]" aria-label="Breadcrumb">
+        <a href="/" class="hover:text-[#0f766e]">Home</a>
+        <span class="text-[#d5d0c4]">/</span>
+        <a href="/collections/" class="hover:text-[#0f766e]">Collections</a>
+        <span class="text-[#d5d0c4]">/</span>
+        <span class="font-medium text-[#1c1a16]">{collection.name}</span>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden bg-[#f8f7f4] py-12 md:py-16">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="flex items-center gap-3">
+        <span class="text-4xl" aria-hidden="true">{collection.emoji}</span>
+        <span class="text-xs font-bold uppercase tracking-widest text-[#14b8a6]">Collection</span>
+      </div>
+      <h1 class="mt-4 max-w-4xl text-4xl font-bold tracking-tight text-[#1c1a16] md:text-5xl">{collection.name}</h1>
+      <p class="mt-4 max-w-3xl text-lg leading-relaxed text-[#5c5a4c]">{collection.heroIntro}</p>
+      <div class="mt-6 flex flex-wrap gap-2">
+        {collection.highlights.map((h) => (
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[#0f766e] shadow-sm border border-[#d5d0c4]/40">
+            <span class="text-[#14b8a6]"><Icon name="fa-star" class="text-[10px]" /></span>
+            <span class="text-[#1c1a16]">{h.label}</span>
+            <span class="font-normal text-[#5c5a4c]">— {h.text}</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Destination cards (enhanced) -->
+  <section class="relative bg-white py-14 md:py-20">
+    <div class="mx-auto max-w-7xl px-6">
+      <h2 class="text-3xl font-bold tracking-tight text-[#1c1a16]">The {members.length} {collection.name}</h2>
+      <p class="mt-3 max-w-2xl text-[#5c5a4c]">Tap any destination for the full guide — tickets, best season, transport and a day-by-day itinerary.</p>
+      <div class="mt-8 grid gap-6">
+        {members.map((d) => (
+          <a href={`/destinations/${d.slug}/`} class="group flex flex-col overflow-hidden rounded-2xl border border-[#d5d0c4]/40 bg-white shadow-sm transition-all hover:border-[#14b8a6] hover:shadow-md sm:flex-row">
+            <div class="sm:w-64 md:w-72 shrink-0 overflow-hidden">
+              <img src={d.heroImg ?? "/images/mountains-zhangjiajie.webp"} alt={d.heroImgAlt ?? d.name} class="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-105 sm:h-full" loading="lazy" width="640" height="420" />
+            </div>
+            <div class="flex flex-1 flex-col p-6">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center gap-1 rounded-full bg-[#ccfbf1]/60 px-2.5 py-0.5 text-xs font-semibold text-[#0f766e]">{d.landscapeLabel}</span>
+                {d.rating && (
+                  <span class="inline-flex items-center gap-1 text-sm font-semibold text-[#1c1a16]">
+                    <Icon name="fa-star" class="text-[#fbbf24] text-xs" />{d.rating.toFixed(1)}
+                    <span class="text-xs font-normal text-[#5c5a4c]">/ 10</span>
+                  </span>
+                )}
+              </div>
+              <h3 class="mt-3 text-xl font-bold text-[#1c1a16] transition-colors group-hover:text-[#0f766e]">{d.name}</h3>
+              {d.intro && <p class="mt-2 text-sm leading-relaxed text-[#5c5a4c] line-clamp-3">{d.intro}</p>}
+              {d.highlights?.length ? (
+                <ul class="mt-3 space-y-1.5">
+                  {d.highlights.slice(0, 3).map((h) => (
+                    <li class="flex items-start gap-2 text-sm text-[#5c5a4c]">
+                      <Icon name="fa-check" class="mt-0.5 shrink-0 text-[11px] text-[#14b8a6]" />
+                      <span class="line-clamp-1">{h}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-medium text-[#5c5a4c]">
+                <span class="inline-flex items-center gap-1"><Icon name="fa-location-dot" class="text-[10px] text-[#14b8a6]" />{d.guide.location}</span>
+                <span class="inline-flex items-center gap-1"><Icon name="fa-calendar" class="text-[10px] text-[#14b8a6]" />{d.seasons.map(getSeasonLabel).join(", ")}</span>
+                <span class="inline-flex items-center gap-1"><Icon name="fa-clock" class="text-[10px] text-[#14b8a6]" />{d.days}</span>
+                <span class="ml-auto inline-flex items-center gap-1 font-semibold text-[#0f766e]">View guide <Icon name="fa-arrow-right" class="text-[10px]" /></span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Compare at a glance -->
+  <section class="relative bg-[#f8f7f4] py-14 md:py-20">
+    <div class="mx-auto max-w-7xl px-6">
+      <h2 class="text-3xl font-bold tracking-tight text-[#1c1a16]">Compare {collection.name} at a glance</h2>
+      <p class="mt-3 max-w-2xl text-[#5c5a4c]">Ticket prices, best season, time needed and altitude — side by side, so you can pick in one pass.</p>
+      <div class="mt-8 overflow-x-auto rounded-2xl border border-[#d5d0c4]/40 bg-white shadow-sm">
+        <table class="w-full min-w-[640px] text-left text-sm">
+          <thead>
+            <tr class="border-b border-[#d5d0c4]/40 bg-[#f8f7f4] text-xs font-bold uppercase tracking-wider text-[#5c5a4c]">
+              <th class="px-5 py-4">Destination</th>
+              <th class="px-5 py-4">Entry ticket</th>
+              <th class="px-5 py-4">Best season</th>
+              <th class="px-5 py-4">Days</th>
+              <th class="px-5 py-4">Altitude</th>
+              <th class="px-5 py-4">Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            {members.map((d) => (
+              <tr class="border-b border-[#d5d0c4]/30 last:border-0">
+                <td class="px-5 py-4 font-semibold text-[#1c1a16]"><a href={`/destinations/${d.slug}/`} class="hover:text-[#0f766e] transition-colors">{d.name}</a></td>
+                <td class="px-5 py-4 text-[#5c5a4c]">{d.guide.ticket}</td>
+                <td class="px-5 py-4 text-[#5c5a4c]">{d.seasons.map(getSeasonLabel).join(", ")}</td>
+                <td class="px-5 py-4 text-[#5c5a4c]">{d.days}</td>
+                <td class="px-5 py-4 text-[#5c5a4c]">{getAltitudeLabel(d.altitude)}</td>
+                <td class="px-5 py-4">
+                  <span class="inline-flex items-center gap-1 font-semibold text-[#1c1a16]">
+                    <Icon name="fa-star" class="text-[#fbbf24] text-xs" />{d.rating?.toFixed(1)}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why these -->
+  <section class="relative bg-white py-14 md:py-20">
+    <div class="mx-auto max-w-3xl px-6">
+      <h2 class="text-3xl font-bold tracking-tight text-[#1c1a16]">{collection.whyHeading}</h2>
+      <div class="mt-6 space-y-5">
+        {collection.whyBody.map((p) => (
+          <p class="text-base leading-relaxed text-[#5c5a4c]">{p}</p>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Suggested route -->
+  {collection.route && (
+    <section class="relative bg-[#f8f7f4] py-14 md:py-20">
+      <div class="mx-auto max-w-3xl px-6">
+        <h2 class="text-3xl font-bold tracking-tight text-[#1c1a16]">{collection.route.title}</h2>
+        <p class="mt-3 text-[#5c5a4c]">{collection.route.intro}</p>
+        <div class="mt-8 space-y-6">
+          {collection.route.steps.map((step) => (
+            <div class="flex gap-5">
+              <div class="w-24 shrink-0 text-sm font-bold text-[#0f766e]">{step.days}</div>
+              <div class="flex-1 border-l-2 border-[#14b8a6]/30 pl-5">
+                <h3 class="font-bold text-[#1c1a16]">{step.title}</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-[#5c5a4c]">{step.detail}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Which to visit first -->
+  {collection.choose && (
+    <section class="relative bg-white py-14 md:py-20">
+      <div class="mx-auto max-w-7xl px-6">
+        <h2 class="text-3xl font-bold tracking-tight text-[#1c1a16]">{collection.choose.title}</h2>
+        <p class="mt-3 max-w-2xl text-[#5c5a4c]">{collection.choose.intro}</p>
+        <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {collection.choose.options.map((o) => (
+            <div class="rounded-2xl border border-[#d5d0c4]/40 bg-white p-5 shadow-sm">
+              <h3 class="font-bold text-[#0f766e]">{o.label}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-[#5c5a4c]">{o.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- FAQ -->
+  {collection.faqs?.length ? (
+    <section class="relative bg-[#f8f7f4] py-14 md:py-20">
+      <div class="mx-auto max-w-3xl px-6">
+        <h2 class="text-3xl font-bold tracking-tight text-[#1c1a16]">Frequently asked questions</h2>
+        <div class="mt-6 space-y-4">
+          {collection.faqs.map((faq, i) => (
+            <details class="group rounded-2xl border border-[#d5d0c4]/40 bg-white p-0 overflow-hidden" open={i === 0}>
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-5 list-none">
+                <span class="font-semibold text-[#1c1a16]">{faq.q}</span>
+                <span class="shrink-0 text-[#14b8a6] transition-transform group-open:rotate-45"><Icon name="fa-arrow-right" class="rotate-90 text-xs" /></span>
+              </summary>
+              <div class="px-5 pb-5 text-[#5c5a4c] leading-relaxed">{faq.a}</div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  ) : null}
+
+  <!-- Explore all -->
+  <section class="relative bg-[#f8f7f4] py-14">
+    <div class="mx-auto max-w-3xl px-6 text-center">
+      <h2 class="text-2xl font-bold text-[#1c1a16]">Browse all collections & destinations</h2>
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <a href="/collections/" class="inline-flex items-center gap-2 rounded-full border border-[#d5d0c4] bg-white px-6 py-3 text-sm font-semibold text-[#0f766e] transition-all hover:border-[#14b8a6]">All collections</a>
+        <a href="/explore/" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#0f766e] to-[#2dd4bf] px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:scale-105">Explore all 12 destinations <Icon name="fa-arrow-right" class="text-xs" /></a>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${siteUrl}/` },
+      { "@type": "ListItem", position: 2, name: "Collections", item: `${siteUrl}/collections/` },
+      { "@type": "ListItem", position: 3, name: collection.name, item: pageUrl },
+    ],
+  })} />
+
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": pageUrl,
+    name: collection.name,
+    description: collection.metaDescription,
+    url: pageUrl,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: members.map((d, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: d.name,
+        url: `${siteUrl}/destinations/${d.slug}/`,
+      })),
+    },
+  })} />
+</Layout>
