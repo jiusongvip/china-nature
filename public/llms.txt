@@ -36,10 +36,10 @@
 
 ## Destination Guides
 
-- [Guilin & Yangshuo](https://guilin-yang-shuo.com/): Karst peaks, Li River cruises and bamboo rafts.
-- [Zhangjiajie National Park](https://zhangjiajie-national-park.com/): The Avatar sandstone pillars.
-- [Yunnan Province](https://yunnan-province.com/): Stone Forest, rice terraces and Xishuangbanna.
-- [Shangri-La](https://shangri-la-yunnan.com/): Tibetan town at 3,200m in Yunnan.
-- [Tibet & Lhasa](https://tibet-lhasa-potala.com/): The Roof of the World.
-- [Dunhuang & Jiuquan](https://dunhuang-jiuquan.com/): Silk Road dunes and the Mogao Caves.
-- [Dujiangyan Panda Base](https://dujiangyan-panda-base.com/): Giant pandas up close.
+- [Guilin & Yangshuo](https://www.guilin-yang-shuo.com/): Karst peaks, Li River cruises and bamboo rafts.
+- [Zhangjiajie National Park](https://www.zhangjiajie-national-park.com/): The Avatar sandstone pillars.
+- [Yunnan Province](https://www.yunnan-province.com/): Stone Forest, rice terraces and Xishuangbanna.
+- [Shangri-La](https://www.shangri-la-yunnan.com/): Tibetan town at 3,200m in Yunnan.
+- [Tibet & Lhasa](https://www.tibet-lhasa-potala.com/): The Roof of the World.
+- [Dunhuang & Jiuquan](https://www.dunhuang-jiuquan.com/): Silk Road dunes and the Mogao Caves.
+- [Dujiangyan Panda Base](https://www.dujiangyan-panda-base.com/): Giant pandas up close.
