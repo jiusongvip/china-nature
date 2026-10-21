@@ -121,7 +121,7 @@ export const destinations: Destination[] = [
       transport: "High-speed rail to Zhangjiajie West, then shuttle to Wulingyuan gate",
       tips: "Stay in Wulingyuan and enter at opening time to beat elevator queues",
     },
-    url: "https://zhangjiajie-national-park.com",
+    url: "https://www.zhangjiajie-national-park.com",
     heroImg: "/images/mountains-zhangjiajie.webp",
     heroImgAlt: "Quartz-sandstone pillars of Zhangjiajie National Forest Park in Hunan, China",
     physical: {
@@ -347,7 +347,7 @@ export const destinations: Destination[] = [
       transport: "Fly to Guilin (KWL) or high-speed rail from Guangzhou (2.5h)",
       tips: "Skip the big boats — a Yulong River bamboo raft is quieter and prettier",
     },
-    url: "https://guilin-yang-shuo.com",
+    url: "https://www.guilin-yang-shuo.com",
     heroImg: "/images/karst-li-river.webp",
     heroImgAlt: "Karst peaks along the Li River in Guilin, China",
     physical: {
@@ -498,7 +498,7 @@ export const destinations: Destination[] = [
       transport: "Fly to Dunhuang from Lanzhou/Xi'an, or overnight train",
       tips: "Mogao Caves sells out — reserve a week ahead; hit the dunes at dusk",
     },
-    url: "https://dunhuang-jiuquan.com",
+    url: "https://www.dunhuang-jiuquan.com",
     heroImg: "/images/deserts-crescent-lake.webp",
     heroImgAlt: "Crescent Lake oasis at the foot of the singing sand dunes in Dunhuang",
     physical: {
@@ -714,7 +714,7 @@ export const destinations: Destination[] = [
       transport: "Fly to Jinghong (JHG) from Kunming or Chongqing",
       tips: "Come in winter for dry, cool weather; see elephants at morning feeding",
     },
-    url: "https://yunnan-province.com",
+    url: "https://www.yunnan-province.com",
     heroImg: "/images/forests-xishuangbanna.webp",
     heroImgAlt: "Tropical rainforest of Xishuangbanna in southern Yunnan",
     physical: {
@@ -858,7 +858,7 @@ export const destinations: Destination[] = [
       transport: "Fly to Diqing (DIG) from Kunming/Chengdu, or bus from Lijiang",
       tips: "Spend the first night acclimatizing; carry layers even in summer",
     },
-    url: "https://shangri-la-yunnan.com",
+    url: "https://www.shangri-la-yunnan.com",
     heroImg: "/images/plateau-pudacuo.webp",
     heroImgAlt: "Alpine lake and forest in Pudacuo National Park near Shangri-La",
     physical: {
@@ -932,7 +932,7 @@ export const destinations: Destination[] = [
       transport: "Fly to Lhasa from Chengdu/Xi'an, or the Qinghai–Tibet railway",
       tips: "Foreign travelers need a Tibet permit via an agency; acclimatize 2 days in Lhasa",
     },
-    url: "https://tibet-lhasa-potala.com",
+    url: "https://www.tibet-lhasa-potala.com",
     heroImg: "/images/plateau-tibet.webp",
     heroImgAlt: "Potala Palace in Lhasa with the Himalayan foothills behind",
     physical: {
